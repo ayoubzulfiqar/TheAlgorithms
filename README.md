@@ -1,4 +1,4 @@
-# The Algorithms
+# The Algorithms & Data Structure
 
 This repository contains implementations of cutting-edge concurrent algorithms coded in Go. Concurrent algorithms allow multiple calculations or processes to be executed simultaneously to improve performance. Go is well-suited for concurrency with built-in support for go-routines and channels.
 
@@ -8,5 +8,7 @@ Each algorithm implementation is carefully optimized, tested, and benchmarked fo
 This collection provides cutting-edge building blocks to develop high-throughput, low-latency concurrent generic systems. The algorithms target throughput-oriented tasks like data processing, analytics, simulations, and more.
 
 ---
+
+[Sorting Algorithms](algo/sort/sort.md)
 
 WORK IN PROGRESS

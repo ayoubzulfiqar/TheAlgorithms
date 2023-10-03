@@ -1,16 +1,11 @@
 package main
 
-import (
-	"fmt"
+// sorts "github.com/ayoubzulfiqar/TheAlgorithms/algo/sort"
 
-	sorts "github.com/ayoubzulfiqar/TheAlgorithms/algo/sort"
-)
+type Numeric interface {
+	~int | ~int32 | ~int64 | ~float32 | ~float64 | ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~string
+}
 
 func main() {
-
-	arr := []int{9, 7, 5, 11, 12, 2, 14, 3, 10, 6}
-	bingedArray := sorts.Bingo(arr)
-
-	fmt.Printf("Sorted Array: %v\n", bingedArray)
 
 }

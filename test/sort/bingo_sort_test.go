@@ -8,10 +8,35 @@ import (
 	sorts "github.com/ayoubzulfiqar/TheAlgorithms/algo/sort"
 )
 
-func TestBingoSort(t *testing.T) {
+func TestBingoIntSort(t *testing.T) {
 	// Test case: Unsorted array
 	unsortedArray := []int{9, 7, 5, 11, 12, 2, 14, 3, 10, 6}
 	expectedSortedArray := []int{2, 3, 5, 6, 7, 9, 10, 11, 12, 14}
+
+	sortedArray := sorts.Bingo(unsortedArray)
+
+	// Check if the sorted array matches the expected result
+	if !reflect.DeepEqual(sortedArray, expectedSortedArray) {
+		t.Errorf("BingoSort(%v) = %v; want %v", unsortedArray, sortedArray, expectedSortedArray)
+	}
+}
+func TestBingoFloatSort(t *testing.T) {
+	// Test case: Unsorted array
+	unsortedArray := []float64{9.0, 7.0, 5.0, 11.0, 12.0, 2.0, 14.0, 3.0, 10.0, 6.0}
+	expectedSortedArray := []float64{2.0, 3.0, 5.0, 6.0, 7.0, 9.0, 10.0, 11.0, 12.0, 14.0}
+
+	sortedArray := sorts.Bingo(unsortedArray)
+
+	// Check if the sorted array matches the expected result
+	if !reflect.DeepEqual(sortedArray, expectedSortedArray) {
+		t.Errorf("BingoSort(%v) = %v; want %v", unsortedArray, sortedArray, expectedSortedArray)
+	}
+}
+
+func TestBingoStringSort(t *testing.T) {
+	// Test case: Unsorted array
+	unsortedArray := []string{"B", "C", "M", "NO", "G"}
+	expectedSortedArray := []string{"B", "C","G", "M", "NO"}
 
 	sortedArray := sorts.Bingo(unsortedArray)
 

@@ -117,7 +117,7 @@ func findMinUnsorted(arr []int, startIndex, endIndex int) int {
 }
 ```
 
-Here's the time complexity, best case, worst case, average case, and auxiliary space complexity of the `Bingo` sorting algorithm:
+### Space & Time Complexity
 
 | Complexity Type            | Complexity      |
 |----------------------------|-----------------|
@@ -138,3 +138,131 @@ Explanation:
 - **Average Case Time Complexity**: On average, the time complexity remains O(n^2) because the algorithm does not employ any special strategies to reduce the number of comparisons or swaps.
 
 - **Space Complexity**: The space complexity of Bingo Sort is O(1) because it operates in-place, meaning it does not require additional memory that grows with the size of the input. It only uses a constant amount of additional memory for variables like `minIndex` and `i`.
+
+## Pigeon Sort
+
+First is to find the Min and Max value inside the Unsorted Array then Calculate the Range of possible value by subtracting the Min Value inside the Unsorted Array by Max value Calculation of the range is because This determine the Amount of bucket needed for the Collection of Values inside the array then create an bucket array (pigeon holes) adn place the value of the original array inside that bucket then Iterate though the range of values and based on the the bucket hole index we will start adding the value inside the original array because it will be getting sorted starting at the beginning and do it step by step while emptying the pigeon hole bucket until nothing left
+
+1. **Find the Min and Max Values**
+
+- Begin by finding the minimum and maximum values within the unsorted array. You can do this by iterating through the array and keeping track of the minimum and maximum values.
+
+2. **Calculate the Range of Possible Values**
+
+- Calculate the range of possible values by subtracting the minimum value found in step 1 from the maximum value. This range represents the span of values that can be present in the input array.
+
+3. **Create an Array of Pigeonholes (Buckets)**
+
+- Create an array of pigeonholes (buckets) to accommodate the values within the range of possible values. The number of pigeonholes should be at least equal to the range of values calculated in step 2.
+
+4. **Distribute Values into Pigeonholes**
+
+- Iterate through the unsorted array, and for each element:
+  - Calculate its position within the pigeonholes array based on its value within the range. This can be done by subtracting the minimum value from the element's value.
+  - Place the element into the corresponding pigeonhole based on this position. If multiple elements have the same value, you can use a data structure (e.g., a linked list) within each pigeonhole to maintain their order.
+
+5. **Collection Phase (Sorting)**
+
+- Begin the collection phase by iterating through the pigeonholes array in order, from the smallest possible value to the largest.
+- For each non-empty pigeonhole:
+  - Collect the elements back into the original array, maintaining their order.
+  - Continue collecting elements from the pigeonhole until it is empty.
+- Repeat this process for all pigeonholes in ascending order.
+
+6. **Final Result**
+
+- After completing the collection phase, the original array will be sorted in ascending order.
+
+The Pigeonhole Sort algorithm sorts elements by distributing them into buckets (pigeonholes) based on their values within a known range, and then collecting them back in ascending order. The critical steps involve calculating the range, creating pigeonholes, distributing values, and carefully collecting elements from the pigeonholes to achieve the desired sorting result.
+
+```go
+func Pigeon(array []int) ([]int, error) {
+	if len(array) == 0 {
+		return nil, errors.New("The Provided Array is Empty")
+	}
+	// Finding min and max with the help of helper function
+	minValue, maxValue, minMaxErr := findMinMax(array)
+	if minMaxErr != nil {
+		return nil, minMaxErr
+	}
+	// Range of possible value - because This determine the Amount of bucket needed for the Collection
+	var rangeOfValue int = maxValue - minValue + 1
+	// we will create pigeon Holes based on range of value for possible collection of the Values
+	pigeonHolesBucket := make([]int, rangeOfValue)
+	// Iterate through the values of the original array
+	for _, num := range array {
+		// adding those values into the relative position
+		// num-minValue := calculates the index of the pigeonhole where the current element should be placed.
+		// and by incrementing ++ we will effectively place the each and every value inside the bucket
+		pigeonHolesBucket[num-minValue]++
+	}
+
+	/// This part is collecting the element from the Bucket and sorting
+	//  it and placing it back to original array as Sorted
+
+	// index is to keep track index at value of the Original Array
+	var index int = 0
+	// this loop iterate through the range of Values inside the Pigeon Hole in Ascending Order (small to Large)
+	for i := 0; i < rangeOfValue; i++ {
+		// It collect the smallest element from the bucket till pigeon hole is empty
+		for pigeonHolesBucket[i] > 0 {
+			// array[index] := is the starting position of the Original array
+			// i := is the index of the position of the current pigeon Hole Bucket
+			// minValue := minimum value in the Original array
+			// By adding (i + minValue) minVal to i, we "de-normalize" the value, converting
+			// it back to its original value within the range.
+			array[index] = i + minValue
+			// Increment the Index for preparing the next element
+			index++
+			// Decrement the values from the bucket to original array till it's empty
+			pigeonHolesBucket[i]--
+		}
+	}
+
+	return array, nil
+}
+
+// Finding the min and max value inside the Unsorted Array
+func findMinMax(array []int) (int, int, error) {
+	// base case - if our array has nothing that It will return Nothing
+	if len(array) == 0 {
+		return 0, 0, errors.New("The Array is Empty: Nothing Found")
+	}
+
+	// Lets Assume that that the First element in the array is the min and also max
+
+	var maxValue int = array[0]
+	var minValue int = array[0]
+	// We iterate though each and every value inside the array and compare it and assign the correct
+	// and corresponding value to min and max
+	for _, num := range array {
+		if num < minValue {
+			minValue = num
+		}
+		if num > maxValue {
+			maxValue = num
+		}
+	}
+
+	return minValue, maxValue, nil
+}
+```
+
+### Space & Time Complexity
+
+| Complexity Type          | Worst Case    | Best Case     | Average Case  | Space Complexity |
+|--------------------------|---------------|---------------|---------------|-------------------|
+| Time Complexity          | O(n + N)      | O(n + N)      | O(n + N)      | O(N)              |
+| Space Complexity         | O(N)          | O(N)          | O(N)          | O(N)              |
+
+Explanation:
+
+- **Time Complexity**:
+  - In the worst case, Pigeonhole Sort has a time complexity of O(n + N), where 'n' is the number of elements in the input array, and 'N' is the range of possible values within the array.
+  - In the best case and average case, Pigeonhole Sort still has a time complexity of O(n + N). This is because the distribution and collection phases both depend on the range 'N' and the number of elements 'n' in the array.
+
+- **Space Complexity**:
+  - The space complexity of Pigeonhole Sort is O(N) because it requires additional space to store the pigeonholes (buckets), and the number of pigeonholes is determined by the range 'N' of possible values.
+  - This space complexity remains the same in both the worst case, best case, and average case.
+
+Keep in mind that Pigeonhole Sort's efficiency heavily depends on the range of values 'N.' If 'N' is significantly larger than 'n' (the number of elements to be sorted), the algorithm may become inefficient due to the large number of empty pigeonholes, resulting in increased space usage and potentially slower sorting times.

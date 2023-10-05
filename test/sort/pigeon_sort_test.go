@@ -7,24 +7,31 @@ import (
 	sorts "github.com/ayoubzulfiqar/TheAlgorithms/algo/sort"
 )
 
-func TestBingoIntSort(t *testing.T) {
+func TestPigeonIntSort(t *testing.T) {
 	// Test case: Unsorted array
 	unsortedArray := []int{9, 7, 5, 11, 12, 2, 14, 3, 10, 6}
 	expectedSortedArray := []int{2, 3, 5, 6, 7, 9, 10, 11, 12, 14}
 
-	sortedArray := sorts.Bingo(unsortedArray)
+	sortedArray, err := sorts.Pigeon(unsortedArray)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// Check if the sorted array matches the expected result
 	if !reflect.DeepEqual(sortedArray, expectedSortedArray) {
-		t.Errorf("BingoSort(%v) = %v; want %v", unsortedArray, sortedArray, expectedSortedArray)
+		t.Errorf("PigeonSort(%v) = %v; want %v", unsortedArray, sortedArray, expectedSortedArray)
 	}
 }
-func TestBingoFloatSort(t *testing.T) {
+
+func TestPigeonFloatSort(t *testing.T) {
 	// Test case: Unsorted array
 	unsortedArray := []float64{9.0, 7.0, 5.0, 11.0, 12.0, 2.0, 14.0, 3.0, 10.0, 6.0}
 	expectedSortedArray := []float64{2.0, 3.0, 5.0, 6.0, 7.0, 9.0, 10.0, 11.0, 12.0, 14.0}
 
-	sortedArray := sorts.Bingo(unsortedArray)
+	sortedArray, err := sorts.Pigeon(unsortedArray)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// Check if the sorted array matches the expected result
 	if !reflect.DeepEqual(sortedArray, expectedSortedArray) {
@@ -32,8 +39,9 @@ func TestBingoFloatSort(t *testing.T) {
 	}
 }
 
-// BenchmarkBingoSort benchmarks the BingoSort function.
-func BenchmarkBingoSort(b *testing.B) {
+// BenchMark
+
+func BenchmarkPigeonSort(b *testing.B) {
 	// Generate a random unsorted array for each benchmark iteration
 	unsortedArray := generateRandomArray(100) // Change the array size as needed
 
@@ -44,7 +52,10 @@ func BenchmarkBingoSort(b *testing.B) {
 
 		// Run the sorting algorithm and measure the time it takes
 		b.StartTimer()
-		sorts.Bingo(arrayCopy)
+		if _, err := sorts.Pigeon(arrayCopy); err != nil {
+			b.Fatalf("Pigeon Error: %v\n", err)
+		}
+
 		b.StopTimer()
 	}
 }

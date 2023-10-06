@@ -353,3 +353,122 @@ Explanation:
 - The average-case time complexity is also O(n^2) because it typically involves a significant number of comparisons and swaps.
 - The best-case time complexity is O(n^2) as well because even if the array is already partially sorted, the algorithm still performs a substantial number of comparisons and swaps.
 - The space complexity is constant O(1) because Cycle Sort is an in-place sorting algorithm that doesn't require additional memory allocation that depends on the input size.
+
+## Comb Sort
+
+Comb Sort is a sorting algorithm that combines the principles of Bubble Sort and the concept of dynamically changing gap sizes. This guide will walk you through the key steps of the Comb Sort algorithm, providing explanations along the way.
+
+ 1.**Initialization**
+
+- Create an array of elements that you want to sort.
+
+ 2. **Swapped Flag**
+
+- Initialize a boolean flag, 'swapped,' as 'true.' This flag will help us track whether any element swaps occurred during a pass.
+
+ 3. **Main Loop**
+
+- Enter a loop that continues until 'swapped' is 'false' or the array length is reduced to one. You cannot swap a single-element array.
+
+4. **Calculate Gap**
+
+- Calculate the 'gap' value for this iteration using the 'getGap' function. The gap dynamically shrinks during each pass.
+
+ 5. **Reset Swapped Flag**
+
+- Set the 'swapped' flag to 'false' at the start of each pass. We assume no swaps have occurred initially.
+
+ 6. **Iterate Through Array**
+
+- Loop through the array, comparing and potentially swapping elements that are 'gap' positions apart.
+
+ 7. **Compare and Swap**
+
+- If the element at the current 'index' is greater than the element at 'index+gap,' swap these elements.
+- This step involves moving elements toward their correct positions in the sorted order.
+
+ 8. **Track Swaps**
+
+- Set the 'swapped' flag to 'true' if any swapping occurred during this pass.
+
+ 9. **Gap Adjustment**
+
+- Repeat the process with a smaller gap in the next iteration.
+- The 'getGap' function calculates the new gap size, adapting it for better efficiency.
+
+ 10. **Repeat Loop**
+
+- Continue the main loop until 'swapped' is 'false' or the array length is reduced to one.
+
+ 11. **Sorting Completion**
+
+- After the loop finishes, the array is sorted.
+
+### The Gap Factor
+
+The "gap" is a crucial concept in the Comb Sort algorithm, and it plays a significant role in the algorithm's performance. It determines how far apart elements are compared and swapped during each pass of the algorithm. The gap is important for the following reasons:
+
+**1. Influence on Sorting Efficiency:**
+
+- The gap size directly impacts the algorithm's sorting efficiency. A larger gap allows for faster movement of elements across the array but may result in fewer comparisons and swaps during each pass. A smaller gap, on the other hand, ensures more thorough comparisons but requires more passes to complete the sorting process.
+
+**2. Adaptive Shrinkage:**
+
+- One of the unique features of the Comb Sort algorithm is that the gap size starts large and progressively shrinks with each pass. This adaptive shrinkage is essential for the algorithm's efficiency because it combines the benefits of both large and small gap sizes.
+- Initially, with a large gap, the algorithm can quickly move larger elements toward the end of the array, similar to the way Bubble Sort works. This reduces the total number of larger elements that need to be moved later.
+- As the gap decreases, the algorithm performs more fine-grained comparisons and swaps, ensuring that smaller elements are placed in their correct positions.
+
+**3. Finding an Optimal Gap:**
+
+- Choosing an optimal gap size is essential for optimizing the performance of Comb Sort. The choice of gap and the shrink factor (typically around 1.3) can significantly affect the sorting speed.
+- Experimenting with different gap sizes and shrink factors is often necessary to find the best combination for a specific dataset. Different datasets may benefit from different gap sizes, so it's not a one-size-fits-all parameter.
+
+**4. Time Complexity Considerations:**
+
+- The time complexity of Comb Sort depends on the choice of the gap size. In its worst-case scenario, if the gap is set as 1, Comb Sort degenerates into a Bubble Sort, resulting in a time complexity of O(n^2). However, with a properly chosen gap, it can achieve an average-case time complexity of approximately O(n*log(n)).
+
+```go
+func Comb(array []int) {
+	// Get the length of the input array
+	n := len(array)
+
+	// Set the initial gap to the length of the array
+	gap := n
+
+	// Define the shrink factor for adjusting the gap
+	shrinkFactor := 1.3
+
+	// Initialize a flag to track whether any swaps occurred
+	swapped := true
+
+	// Continue looping until the gap is greater than 1 or swaps occurred
+	for gap > 1 || swapped {
+		// Calculate the gap using the shrink factor
+		gap = int(float64(gap) / shrinkFactor)
+
+		// Ensure that the gap is at least 1 to prevent division by zero
+		if gap < 1 {
+			gap = 1
+		}
+
+		// Initialize the swapped flag to false for this pass
+		swapped = false
+
+		// Compare and potentially swap elements with the calculated gap
+		for index := 0; index < n-gap; index++ {
+			if array[index] > array[index+gap] {
+				// Swap elements if the condition is met
+				array[index], array[index+gap] = array[index+gap], array[index]
+
+				// Set the swapped flag to true to indicate a swap occurred
+				swapped = true
+			}
+		}
+	}
+}
+```
+
+| Complexity         | Worst Case                              | Average Case                         | Best Case                                | Space Complexity |
+|--------------------|----------------------------------------|-------------------------------------|------------------------------------------|------------------|
+| Time Complexity    | O(n^2)                                   | O(n^2)                                | O(n*log(n)) [Optimal Gap Sequence]        | O(1)             |
+| Explanation        | In the worst case, when the gap is set to 1 and the array is in reverse order or nearly so, Comb Sort becomes inefficient and takes quadratic time. | In most practical cases, Comb Sort's adaptive gap size reduction provides better performance than Bubble Sort but still exhibits quadratic time complexity. | In the best case, when an optimal gap sequence is used and data is partially sorted, Comb Sort approaches a time complexity of n*log(n). Achieving this best-case performance is challenging in practice. | Comb Sort is an in-place sorting algorithm, which means it uses a constant amount of extra memory for variables like the gap and loop indices. |

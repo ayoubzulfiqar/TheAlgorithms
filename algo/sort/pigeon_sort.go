@@ -2,6 +2,93 @@ package sort
 
 import "errors"
 
+/*
+
+
+
+-* The Pigeon Sort *-
+
+ --- Finding Min & Max ---
+
+1. **Function Signature**:
+   ```go
+   func findMinMax[T Numeric](array []T) (T, T, error)
+   ```
+   - This function takes an array of generic type `T` as input.
+   - It returns two values of type `T`, representing the minimum and maximum values found in the array.
+   - If the array is empty, it returns an error.
+
+2. **Error Handling**:
+   - The code first checks if the input array is empty (i.e., its length is zero).
+   If it is empty, an error is returned with the message "The Array is Empty: Nothing Found."
+
+3. **Initialization**:
+   - The code initializes two variables, `maxValue` and `minValue`, both of type `T`,
+     with the value of the first element in the input array.
+     These variables are used to keep track of the current maximum and minimum values found in the array.
+
+4. **Iteration through the Array**:
+   - The code then iterates through each element `num` in the input array using a `for` loop.
+   - Inside the loop, it compares `num` with the current `minValue` and `maxValue`.
+   - If `num` is smaller than the current `minValue`, it updates `minValue` to be equal to `num`.
+   - If `num` is larger than the current `maxValue`, it updates `maxValue` to be equal to `num`.
+
+5. **Result**:
+   - After the loop completes, the function returns the final values of `minValue` and `maxValue`,
+     which represent the minimum and maximum values found in the input array.
+   - If the array was empty, it returns an error indicating that nothing was found.
+
+
+
+
+--- Pigeon Sort ----
+
+
+
+1. **Function Signature**:
+   ```go
+   func Pigeon[T Numeric](array []T) ([]T, error)
+   ```
+   - This function takes an array of generic type `T` as input.
+   - It returns the sorted array and an error (if any).
+   - If the input array is empty, it returns an error with the message "The Provided Array is Empty."
+
+2. **Error Handling**:
+   - The code first checks if the input array is empty (i.e., its length is zero).
+     If it is empty, it returns an error with the message "The Provided Array is Empty."
+
+3. **Finding Min and Max Values**:
+   - The code calls the `findMinMax` function to find the minimum (`minValue`)
+     and maximum (`maxValue`) values in the input array.
+   - If an error occurs while finding the min and max values, it returns that error.
+
+4. **Creating Pigeonholes**:
+   - It calculates the `rangeOfValue`, which represents the range of possible values in the input array.
+   - It creates a slice called `pigeonHolesBucket` to serve as pigeonholes.
+     The length of this slice is determined by the range of values.
+
+5. **Placing Values in Pigeonholes**:
+   - The code iterates through the values of the original input array.
+   - For each value `num`, it calculates the index where it should be placed in
+     the pigeonhole array using `int(num-minValue)`.
+   - It increments the value in the corresponding pigeonhole, effectively counting
+     how many times each value appears in the original array.
+
+6. **Collecting and Sorting**:
+   - The code then collects the values from the pigeonholes in ascending order (from small to large).
+   - It uses a loop that iterates through the range of possible values inside the pigeonhole.
+   - Within the loop, it collects the smallest value from the current pigeonhole (if any) and places
+     it back into the original array.
+   - The index variable `index` is used to keep track of the position in the original array where the values are placed.
+
+7. **Result**:
+   - After the sorting process is complete, the function returns the sorted `array` and a nil error.
+
+
+
+
+*/
+
 func Pigeon[T Numeric](array []T) ([]T, error) {
 	if len(array) == 0 {
 		return nil, errors.New("The Provided Array is Empty")

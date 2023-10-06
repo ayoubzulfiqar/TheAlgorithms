@@ -266,3 +266,90 @@ Explanation:
   - This space complexity remains the same in both the worst case, best case, and average case.
 
 Keep in mind that Pigeonhole Sort's efficiency heavily depends on the range of values 'N.' If 'N' is significantly larger than 'n' (the number of elements to be sorted), the algorithm may become inefficient due to the large number of empty pigeonholes, resulting in increased space usage and potentially slower sorting times.
+
+## Cycle Sort
+
+1. **Loop Through the Array**: Begin by setting up a loop to iterate through the unsorted array. This loop will help you process each element in the array.
+
+2. **Select the Current Item**: For each iteration, select the first element in the array as the 'item' that you want to place in its correct sorted position. This element will also serve as your starting point.
+
+3. **Find the Correct Position**: Initialize a 'position' variable to the current starting position (which is the index of the 'item' within the array). Then, loop through the remaining elements in the array, starting from the second element. Compare each element with the 'item' to determine the correct position for 'item.' If an element is smaller than 'item,' increment the 'position' variable.
+
+4. **Skip If Already Sorted**: Check if 'item' is already in its correct sorted position by comparing 'position' with the initial starting position. If they are the same, it means 'item' is already in the right place, so you can move on to the next item.
+
+5. **Find the Next Available Position**: To avoid overwriting existing elements in the array, find the next available position for 'item.' This involves looping through the array until you find a position where 'item' can be placed without overwriting any values.
+
+6. **Swap the Elements**: Once you've identified the correct position and the next available position for 'item,' perform a swap. Swap 'item' with the element at the 'position.' This step effectively moves 'item' to its correct sorted position.
+
+7. **Continue Swapping**: To ensure that 'item' reaches its final sorted position, continue swapping elements until 'item' cycles back to its initial starting position within the array. This step may involve multiple swaps.
+
+```go
+func Cycle(array []int) []int {
+    // Loop through the unsorted array
+    for initialPosition := 0; initialPosition < len(array)-1; initialPosition++ {
+        // Select the first element as the 'item' to be placed in its correct position
+        item := array[initialPosition]
+        // Initialize 'position' as the current starting position for 'item'
+        position := initialPosition
+
+        // Find the correct position for the 'item'
+        // by comparing it with elements starting from the second element
+        for i := initialPosition + 1; i < len(array); i++ {
+            // If the current element is smaller than 'item', increment 'position'
+            if array[i] < item {
+                position++
+            }
+        }
+
+        // If 'item' is already in its correct position, move on to the next item
+        // Ensures that smaller elements are already in their correct positions
+        if position == initialPosition {
+            continue
+        }
+
+        // Find the next available position for 'item' to avoid overwriting elements
+        for item == array[position] {
+            position++
+        }
+
+        // Swap 'item' with the element at 'position', placing 'item' in its correct position
+        array[position], item = item, array[position]
+
+        // Continue swapping until 'item' reaches its final sorted position
+        for position != initialPosition {
+            // Reset 'position' to the initial position
+            position = initialPosition
+
+            // Find the next available position for 'item'
+            for i := initialPosition + 1; i < len(array); i++ {
+                if array[i] < item {
+                    position++
+                }
+            }
+
+            // Find the next available position for 'item' to avoid overwriting elements
+            for item == array[position] {
+                position++
+            }
+
+            // Swap 'item' with the element at 'position' to continue its cycle
+            array[position], item = item, array[position]
+        }
+    }
+    return array
+}
+```
+
+### Space & Time Complexity
+
+| Complexity        | Worst Case    | Average Case  | Best Case     |
+|-------------------|---------------|---------------|---------------|
+| Time Complexity   | O(n^2)        | O(n^2)        | O(n^2)        |
+| Space Complexity  | O(1)          | O(1)          | O(1)          |
+
+Explanation:
+
+- The worst-case time complexity is O(n^2) because in the worst case, each element may need to go through multiple swaps to reach its final sorted position.
+- The average-case time complexity is also O(n^2) because it typically involves a significant number of comparisons and swaps.
+- The best-case time complexity is O(n^2) as well because even if the array is already partially sorted, the algorithm still performs a substantial number of comparisons and swaps.
+- The space complexity is constant O(1) because Cycle Sort is an in-place sorting algorithm that doesn't require additional memory allocation that depends on the input size.

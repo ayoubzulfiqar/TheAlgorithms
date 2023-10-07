@@ -472,3 +472,79 @@ func Comb(array []int) {
 |--------------------|----------------------------------------|-------------------------------------|------------------------------------------|------------------|
 | Time Complexity    | O(n^2)                                   | O(n^2)                                | O(n*log(n)) [Optimal Gap Sequence]        | O(1)             |
 | Explanation        | In the worst case, when the gap is set to 1 and the array is in reverse order or nearly so, Comb Sort becomes inefficient and takes quadratic time. | In most practical cases, Comb Sort's adaptive gap size reduction provides better performance than Bubble Sort but still exhibits quadratic time complexity. | In the best case, when an optimal gap sequence is used and data is partially sorted, Comb Sort approaches a time complexity of n*log(n). Achieving this best-case performance is challenging in practice. | Comb Sort is an in-place sorting algorithm, which means it uses a constant amount of extra memory for variables like the gap and loop indices. |
+
+## Bubble Sort
+
+1. Initialize `n` with the length of the input slice `arr`. `n` represents the number of elements in the slice.
+
+2. Initialize a boolean variable `swapped` to `true`. This variable will be used to check whether any swaps were made in a pass.
+
+3. Enter a `for` loop that continues as long as `swapped` is `true`. This loop ensures that the sorting process continues until no more swaps are made in a pass.
+
+4. Within the loop, set `swapped` to `false`. This flag is initially true and will only be set to false if no swaps are made in the current pass.
+
+5. Start another `for` loop that iterates through the slice from index 1 to `n-1`. We compare adjacent elements and swap them if they are in the wrong order.
+
+6. If the comparison (`arr[i-1] > arr[i]`) is true, swap the elements using a parallel assignment. This is where the actual swapping of elements occurs.
+
+7. Set `swapped` to `true` to indicate that a swap was made in this pass.
+
+8. After the inner loop completes, one pass through the array is done. Now, decrement `n` to reduce the range of elements to consider in the next pass.
+
+```go
+func Bubble(array []int) []int {
+	var swapped bool = true
+	// entire length of the array
+	var n int = len(array)
+	// continues Loop until all the elements inside the array is swapped or Sorted
+	for swapped {
+		// we assume that the array is not sorted
+		swapped = false
+		// loop thorough the array at position second
+		for i := 1; i < n; i++ {
+			// array[i-1]: the first element of the array
+			// array[i]: second element of the array
+			// Checking if first element of the array is greater than the second element than we need to swap
+			if array[i-1] > array[i] {
+				array[i-1], array[i] = array[i], array[i-1]
+				// outer loop will continue till this condition reached
+				swapped = true
+			}
+		}
+		// After each pass, the largest element is at the end, so we reduce the range
+		n--
+	}
+	return array
+}
+
+// Recursive Bubble
+
+func RecursiveBubble(array []int) []int {
+	n := len(array)
+	if n <= 1 {
+		return array
+	}
+	for i := 1; i < n; i++ {
+		if array[i-1] > array[i] {
+			array[i-1], array[i] = array[i], array[i-1]
+		}
+	}
+	RecursiveBubble(array[:n-1])
+	return array
+}
+```
+
+### Space & Time Complexity
+
+```markdown
+| Bubble Sort      | Best Case Time Complexity | Average Case Time Complexity | Worst Case Time Complexity | Space Complexity |
+|------------------|---------------------------|------------------------------|---------------------------|------------------|
+| Bubble Sort      | O(n)                      | O(n^2)                       | O(n^2)                    | O(1)             |
+```
+
+Explanation:
+
+- Best Case Time Complexity: O(n) - This is when the input array is already sorted, and Bubble Sort makes only one pass to confirm the array is sorted.
+- Average Case Time Complexity: O(n^2) - This is the expected time complexity when elements are randomly ordered, and Bubble Sort makes multiple passes.
+- Worst Case Time Complexity: O(n^2) - This occurs when the input array is sorted in reverse order, and Bubble Sort makes the maximum number of passes with many swaps.
+- Space Complexity: O(1) - Bubble Sort is an in-place sorting algorithm, meaning it doesn't require additional memory proportional to the input size. It has a constant space complexity.

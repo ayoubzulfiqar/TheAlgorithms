@@ -907,3 +907,54 @@ func recursiveFlip(array []int, n int) []int {
 - **Average Case**: On average, Pancake Sort performs O(n^2) comparisons and flips. The average case time complexity remains the same as the worst and best cases.
 
 - **Space Complexity**: Pancake Sort has a space complexity of O(1) since it sorts the array in-place, without requiring additional memory allocation proportional to the input size. It uses a constant amount of extra space for variables like loop counters and indices.
+
+## Sleep Sort
+
+Nothing More Useless than the Sleep Sort - it does Nothing. Just Fascinating to look at
+
+Sleep Sort is not guaranteed to work accurately due to the asynchronous nature of go-routines and the unpredictability of when they will wake up. It's a playful experiment rather than a reliable sorting algorithm. The results may vary each time you run the code, and it's not suitable for practical use.
+
+```go
+// safeAppend safely appends an element of type T to a slice, protected by a mutex.
+func safeAppend[T Numeric](arr *[]T, wg *sync.WaitGroup, mutex *sync.Mutex, num T) {
+	// Mark the wait group as done when this goroutine exits.
+	defer wg.Done()
+
+	// Lock the mutex to ensure exclusive access to the slice.
+	mutex.Lock()
+
+	// Append the element to the slice.
+	*arr = append(*arr, num)
+
+	// Unlock the mutex to allow other go-routines to access the slice.
+	mutex.Unlock()
+}
+
+// Sleep is an implementation of the Sleep Sort algorithm that can work with slices of different numeric types.
+func Sleep[T Numeric](array []T) []T {
+	// Create a wait group to track the completion of go-routines.
+	var wg sync.WaitGroup
+
+	// Create a mutex to ensure safe access to the sorted slice.
+	var mutex sync.Mutex
+
+	// Initialize the sorted slice with an initial capacity.
+	sorted := make([]T, 0, len(array))
+
+	// Iterate through the input array.
+	for _, num := range array {
+		// Increment the wait group counter to track the number of active go-routines.
+		wg.Add(1)
+
+		// Launch a goroutine to safely append the element to the sorted slice.
+		go safeAppend(&sorted, &wg, &mutex, num)
+	}
+
+	// Wait for all go-routines to finish before proceeding.
+	wg.Wait()
+
+	// Return the sorted slice with initially allocated space removed.
+	return sorted
+}
+
+```

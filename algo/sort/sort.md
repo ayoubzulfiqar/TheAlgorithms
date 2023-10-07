@@ -536,11 +536,9 @@ func RecursiveBubble(array []int) []int {
 
 ### Space & Time Complexity
 
-```markdown
-| Bubble Sort      | Best Case Time Complexity | Average Case Time Complexity | Worst Case Time Complexity | Space Complexity |
+| Bubble Sort      | Best Case | Average Case | Worst Case  | Space Complexity |
 |------------------|---------------------------|------------------------------|---------------------------|------------------|
 | Bubble Sort      | O(n)                      | O(n^2)                       | O(n^2)                    | O(1)             |
-```
 
 Explanation:
 

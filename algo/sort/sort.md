@@ -546,3 +546,79 @@ Explanation:
 - Average Case Time Complexity: O(n^2) - This is the expected time complexity when elements are randomly ordered, and Bubble Sort makes multiple passes.
 - Worst Case Time Complexity: O(n^2) - This occurs when the input array is sorted in reverse order, and Bubble Sort makes the maximum number of passes with many swaps.
 - Space Complexity: O(1) - Bubble Sort is an in-place sorting algorithm, meaning it doesn't require additional memory proportional to the input size. It has a constant space complexity.
+
+## Gnome Sort (Stupid Sort)
+
+Certainly, here's a step-by-step explanation of how the provided Gnome Sort function works without the code:
+
+1. **Function Purpose**: The `Gnome` function is designed to sort an integer array using the Gnome Sort algorithm.
+
+2. **Initialization**:
+   - `index`: We start by initializing a variable called `index` to 0. This variable represents our current position within the array.
+   - `n`: We find the length of the input array and store it in a variable called `n`.
+
+3. **Looping Through the Array**:
+   - The function enters a `for` loop that runs as long as `index` is less than `n`. This loop is the core of the Gnome Sort algorithm.
+
+4. **Checking Conditions**:
+   - Inside the loop, we check two conditions:
+     - `index == 0`: This condition checks if the current position is at the beginning of the array. If it is, we are already at the starting point.
+     - `array[index] >= array[index-1]`: This condition checks if the current element is greater than or equal to the previous element in the array. If this condition is true, it means the elements are in the correct order.
+
+5. **Moving Forward**:
+   - If either of the conditions mentioned in the previous step is met, we increment `index` by 1. This effectively moves us to the next position in the array.
+
+6. **Swapping Elements**:
+   - If neither of the conditions is met, it implies that the current element is out of order with respect to the previous element. In this case, we perform a swap operation:
+     - `array[index]` is swapped with `array[index-1]`, which effectively moves the smaller element one position backward in the array.
+     - After the swap, we decrement `index` by 1 to continue checking the previous pair of elements.
+
+7. **Loop Continuation**:
+   - The loop continues to iterate until `index` reaches or exceeds the length of the array (`n`). When this happens, it indicates that the entire array is sorted.
+
+8. **Sorted Array Return**:
+   - Finally, the function returns the sorted array. The original array is now sorted in place.
+
+```go
+func Gnome(array []int) []int {
+	// Initialize the starting position within the array.
+	var index int = 0
+
+	// Get the length of the input array.
+	var n int = len(array)
+
+	// Loop through the array from the start index to the end of the array.
+	for index < n {
+		// Check if the current position is at the beginning of the array (index == 0)
+		// or if the current element is greater than or equal to the previous element.
+		if index == 0 || array[index] >= array[index-1] {
+			// Move to the next position in the array.
+			index = index + 1
+		} else {
+			// If not, swap the current element with the previous element.
+			array[index], array[index-1] = array[index-1], array[index]
+
+			// Move one position backward.
+			index = index - 1
+		}
+	}
+
+	// Return the sorted array.
+	return array
+}
+```
+
+| Complexity      | Best Case       | Average Case    | Worst Case      | Space Complexity |
+|-----------------|-----------------|-----------------|-----------------|------------------|
+| Time Complexity | O(n)            | O(n^2)          | O(n^2)          | O(1)             |
+| Space Complexity| O(1)            | O(1)            | O(1)            | O(1)             |
+
+Explanation:
+
+- **Time Complexity**:
+  - Best Case: O(n) - The best-case scenario occurs when the input array is already sorted. In this case, Gnome Sort will make a single pass through the array.
+  - Average Case: O(n^2) - In the average case, Gnome Sort makes roughly n^2/4 comparisons and swaps.
+  - Worst Case: O(n^2) - The worst-case scenario occurs when the input array is sorted in reverse order. Gnome Sort will make the maximum number of comparisons and swaps, resulting in quadratic time complexity.
+
+- **Space Complexity**:
+  - O(1) - Gnome Sort is an in-place sorting algorithm, meaning it doesn't require additional memory or data structures proportional to the input size. It has a constant space complexity.

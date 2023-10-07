@@ -11,8 +11,8 @@ type Numeric interface {
 }
 
 func main() {
-	arr := []float64{1.4, 3.4, 2.53, 0.5, 6.854, 4.3434,545.7, 8.455, 10/6, 9.35}
-	array := sorts.OddEven(arr)
+	arr := []int{1, 3, 2, 5, 6, 4,7, 8, 10, 9}
+	array := sorts.CockTail(arr)
 	fmt.Printf("Sorted: %v", array)
 
 }

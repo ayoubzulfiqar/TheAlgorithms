@@ -691,3 +691,87 @@ func OddEven(array []int) []int {
 
 - **Space Complexity**:
   - Regardless of the input data, Odd-Even Sort uses a constant amount of extra space for variables (e.g., `sorted`, `oddIndex`, `evenIndex`, etc.). Therefore, the space complexity is O(1), indicating that it is an in-place sorting algorithm.
+
+## CockTail Sort
+
+1. Initialize variables:
+   - `swapped` is a flag to keep track of whether any swaps were made in a pass.
+   - `start` represents the starting index of the unsorted portion of the array.
+   - `end` represents the last index of the unsorted portion of the array.
+
+2. Enter a loop that continues until no swaps are made in a pass (indicating that the array is sorted).
+
+3. Within the loop:
+   - Perform a forward pass:
+     - Iterate through the array from `start` to `end-1`.
+     - Compare adjacent elements and swap them if they are out of order.
+     - Set `swapped` to `true` if any swaps are made.
+     - If no swaps are made in this pass, break out of the loop as the array is sorted.
+
+4. Reset the `swapped` flag to `false` and decrement `end` by 1 since the largest element is now at the end.
+
+5. Perform a backward pass: left to right
+   - Iterate through the array from `end-1` to `start`.
+   - Compare adjacent elements and swap them if they are out of order.
+   - Set `swapped` to `true` if any swaps are made.
+
+6. Increment `start` by 1 since the smallest element is now at the beginning.
+
+7. Repeat steps 3-6 until no swaps are made in a pass, indicating that the array is fully sorted.(right to left)
+
+8. Finally, return the sorted array.
+
+```go
+func CockTail(array []int) []int {
+	// Initialize variables
+	var swapped bool = true         // Flag to check if any swaps are made in a pass
+	var start int = 0              // Start of the unsorted portion of the array
+	var end int = len(array)       // End of the unsorted portion of the array
+
+	// Continue sorting until no swaps are made in a pass
+	for swapped {
+		swapped = false // Reset the swapped flag at the beginning of each pass
+
+		// Forward pass: Move the largest element to the end (left to right)
+		for i := start; i < end-1; i++ {
+			if array[i] > array[i+1] {
+				array[i], array[i+1] = array[i+1], array[i] // Swap elements if they are out of order
+				swapped = true // Mark as swapped
+			}
+		}
+
+		// If no swaps were made in the forward pass, the array is sorted
+		if !swapped {
+			break
+		}
+
+		swapped = false // Reset the swapped flag for the backward pass
+		end = end - 1   // Decrease the end pointer as the largest element is now at the end
+
+		// Backward pass: Move the smallest element to the beginning (right to left)
+		for i := end - 1; i >= start; i-- {
+			if array[i] > array[i+1] {
+				array[i], array[i+1] = array[i+1], array[i] // Swap elements if they are out of order
+				swapped = true // Mark as swapped
+			}
+		}
+
+		start = start + 1 // Increase the start pointer as the smallest element is now at the beginning
+	}
+
+	return array // Return the sorted array
+}
+```
+
+| Complexity          | Worst Case     | Average Case  | Best Case     |
+|---------------------|----------------|---------------|---------------|
+| Time Complexity     | O(n^2)         | O(n^2)        | O(n)          |
+| Space Complexity    | O(1)           | O(1)          | O(1)          |
+
+- **Time Complexity**:
+  - Worst Case: In the worst case, when the input array is completely unsorted, Cocktail Sort makes a large number of comparisons and swaps. Its worst-case time complexity is O(n^2), where n is the number of elements in the array.
+  - Average Case: On average, the number of comparisons and swaps remains high, resulting in an average time complexity of O(n^2).
+  - Best Case: In the best case, when the input array is already sorted, Cocktail Sort still makes some comparisons but no swaps. The best-case time complexity is O(n).
+
+- **Space Complexity**:
+  - Cocktail Sort is an in-place sorting algorithm, meaning it doesn't require additional memory proportional to the input size. Regardless of the input data, it uses a constant amount of extra space for variables. Therefore, the space complexity is O(1), indicating it is a space-efficient algorithm.

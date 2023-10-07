@@ -53,3 +53,39 @@ func flip[T Numeric](array []T, k int) []T {
 	}
 	return array
 }
+
+// Recursive
+func RecursivePanCake[T Numeric](array []T) []T {
+	var n int = len(array)
+	if n == 1 {
+		return array
+	}
+	var maxIndex int = 0
+	for i := 0; i < n; i++ {
+		if array[i] > array[maxIndex] {
+			maxIndex = i
+		}
+	}
+	if maxIndex != 0 {
+		array = recursiveFlip(array, maxIndex)
+	}
+	array = recursiveFlip(array, n-1)
+	RecursivePanCake(array[:n-1])
+	return array
+}
+func recursiveFlip[T Numeric](array []T, n int) []T {
+	// start : starting index of the Array
+	var start int = 0
+	// end: till at the end index of the array
+	var end int = n
+	// loop through left to right, if element are smaller than right element
+	for start < end {
+		// we swap
+		array[start], array[end] = array[end], array[start]
+		// moving forward toward the right array
+		start++
+		// moving back to left side of the array
+		end--
+	}
+	return array
+}

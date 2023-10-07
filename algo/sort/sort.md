@@ -549,8 +549,6 @@ Explanation:
 
 ## Gnome Sort (Stupid Sort)
 
-Certainly, here's a step-by-step explanation of how the provided Gnome Sort function works without the code:
-
 1. **Function Purpose**: The `Gnome` function is designed to sort an integer array using the Gnome Sort algorithm.
 
 2. **Initialization**:
@@ -622,3 +620,74 @@ Explanation:
 
 - **Space Complexity**:
   - O(1) - Gnome Sort is an in-place sorting algorithm, meaning it doesn't require additional memory or data structures proportional to the input size. It has a constant space complexity.
+
+## OddEven Sort (Brick Sort)
+
+The algorithm operates as follows:
+
+1. In each pass, it compares and swaps elements at even-indexed positions (0, 2, 4, etc.) with their adjacent elements at odd-indexed positions (1, 3, 5, etc.).
+
+2. Then, in the next pass, it reverses the process, comparing and swapping elements at odd-indexed positions with their adjacent elements at even-indexed positions.
+
+3. This process continues until no more swaps are needed in an entire pass, indicating that the array is sorted.
+
+The terms "odd" and "even" in Odd-Even Sort do not refer to the values of the elements but rather to the positions or indices of the elements within the array.
+
+Implementation:
+
+1. It starts by assuming that the array is sorted (`sorted` is initially set to `true`).
+
+2. It enters a loop that continues until the array is sorted. The loop will exit when no swaps are made in an entire pass through both odd and even indices, indicating that the array is sorted.
+
+3. In each pass through the loop, it performs two sorting steps:
+
+   - Step 1: It compares and swaps adjacent elements at odd indices (`oddIndex`) in the array.
+
+   - Step 2: It compares and swaps adjacent elements at even indices (`evenIndex`) in the array.
+
+4. If any swap is made during either of the sorting steps, `sorted` is set to `false` to indicate that the array is not fully sorted.
+
+5. The loop continues until no swaps are made during an entire pass, at which point it exits, and the sorted array is returned.
+
+```go
+func OddEven(array []int) []int {
+	var sorted bool = false
+	var n int = len(array)
+
+	// Continue looping until the array is sorted
+	for !sorted {
+		sorted = true // Assume the array is sorted initially
+
+		// Odd-Even Sort Step 1: Compare and swap adjacent elements at odd indices
+		for oddIndex := 1; oddIndex < n-1; oddIndex += 2 {
+			if array[oddIndex] > array[oddIndex+1] {
+				array[oddIndex], array[oddIndex+1] = array[oddIndex+1], array[oddIndex]
+				sorted = false // Mark as unsorted if a swap occurs
+			}
+		}
+
+		// Odd-Even Sort Step 2: Compare and swap adjacent elements at even indices
+		for evenIndex := 0; evenIndex < n-1; evenIndex += 2 {
+			if array[evenIndex] > array[evenIndex+1] {
+				array[evenIndex], array[evenIndex+1] = array[evenIndex+1], array[evenIndex]
+				sorted = false // Mark as unsorted if a swap occurs
+			}
+		}
+	}
+
+	return array // Return the sorted array
+}
+```
+
+| Complexity          | Worst Case     | Average Case  | Best Case     |
+|---------------------|----------------|---------------|---------------|
+| Time Complexity     | O(n^2)         | O(n^2)        | O(n)          |
+| Space Complexity    | O(1)           | O(1)          | O(1)          |
+
+- **Time Complexity**:
+  - Worst Case: In the worst case, when the array is completely unsorted, Odd-Even Sort makes many passes and comparisons. It has a time complexity of O(n^2), where n is the number of elements in the array.
+  - Average Case: On average, the number of comparisons and swaps remains high, leading to an average time complexity of O(n^2).
+  - Best Case: In the best case, when the array is already sorted, the algorithm performs significantly fewer comparisons and swaps. The best-case time complexity is O(n).
+
+- **Space Complexity**:
+  - Regardless of the input data, Odd-Even Sort uses a constant amount of extra space for variables (e.g., `sorted`, `oddIndex`, `evenIndex`, etc.). Therefore, the space complexity is O(1), indicating that it is an in-place sorting algorithm.

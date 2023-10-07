@@ -775,3 +775,96 @@ func CockTail(array []int) []int {
 
 - **Space Complexity**:
   - Cocktail Sort is an in-place sorting algorithm, meaning it doesn't require additional memory proportional to the input size. Regardless of the input data, it uses a constant amount of extra space for variables. Therefore, the space complexity is O(1), indicating it is a space-efficient algorithm.
+
+## PanCake Sort
+
+1. **Pancake Sort Introduction**: Pancake Sort is a sorting algorithm that aims to sort an array of integers in ascending order.
+
+2. **Loop Through Array (Descending)**: The `PancakeSort` function iterates through the array from the end to the beginning. The variable `i` starts from the length of the array and decrements with each iteration, effectively moving towards the left side of the array.
+
+3. **Find the Maximum Element**: In each iteration, the `findMax` function is called to find the index of the maximum element within the current unsorted portion of the array, from index 0 to `i`.
+
+4. **Check and Flip**: If the maximum element is not already at the end of the unsorted portion (index `i-1`), the algorithm performs two flips:
+   - The first flip reverses the order of elements from the beginning of the array up to the largest element, effectively moving the largest element to the top of the stack (index 0).
+   - The second flip places the largest element in its correct position at the bottom of the sorted portion of the array.
+
+5. **Repeat Until Sorted**: This process continues in each iteration of the loop until the entire array is sorted in ascending order.
+
+6. **Return Sorted Array**: Finally, the function returns the sorted array.
+
+The `findMax` function is responsible for finding the index of the maximum element within a given portion of the array, and the `flip` function reverses elements within a specified range of the array. These helper functions are crucial for the Pancake Sort algorithm to work effectively.
+
+```go
+// Pancake Sort is a sorting algorithm that sorts an array of integers in ascending order.
+func PancakeSort(array []int) []int {
+	// Get the length of the input array
+	n := len(array)
+	
+	// Loop through the array from the end, decrementing `i` to move towards the left
+	for i := n; i > 1; i-- {
+		// Find the index of the maximum element within the current unsorted portion
+		maxIndex := findMax(array[:i])
+		
+		// If the maximum element is not at the end of the current unsorted portion
+		if maxIndex != i-1 {
+			// Flip the portion of the array from index 0 to `maxIndex`
+			array = flip(array, maxIndex)
+			// Flip the portion of the array from index 0 to `i-1`, moving the largest element to its correct position
+			array = flip(array, i-1)
+		}
+	}
+	
+	// Return the sorted array
+	return array
+}
+
+// findMax finds the index of the maximum element within the given array.
+func findMax(array []int) int {
+	maxIndex := 0
+	
+	// Loop through the elements of the array
+	for i := 1; i < len(array); i++ {
+		// If the current element is larger than the maximum found so far
+		if array[i] > array[maxIndex] {
+			// Update the index of the maximum element
+			maxIndex = i
+		}
+	}
+	
+	// Return the index of the maximum element
+	return maxIndex
+}
+
+// flip reverses the elements in the slice from index 0 to k, inclusive.
+func flip(array []int, k int) []int {
+	start := 0
+	end := k
+	
+	// Reverse the elements within the specified range
+	for start < end {
+		// Swap elements at start and end indices
+		array[start], array[end] = array[end], array[start]
+		
+		// Move the indices towards each other
+		start++
+		end--
+	}
+	
+	// Return the modified array after the flip operation
+	return array
+}
+```
+
+### Time & Space Complexity
+
+| Complexity      | Worst Case  | Best Case | Average Case | Space Complexity |
+|-----------------|-------------|-----------|--------------|------------------|
+| Time Complexity | O(n^2)      | O(n^2)    | O(n^2)       | O(1)             |
+
+- **Worst Case**: In the worst case, when the input array is in reverse order (the largest element is at the beginning of the unsorted portion in each step), Pancake Sort requires O(n^2) comparisons and flips to sort the array.
+
+- **Best Case**: The best-case time complexity is also O(n^2). Even if the array is already sorted, Pancake Sort will still require a similar number of comparisons and flips to verify that it's sorted.
+
+- **Average Case**: On average, Pancake Sort performs O(n^2) comparisons and flips. The average case time complexity remains the same as the worst and best cases.
+
+- **Space Complexity**: Pancake Sort has a space complexity of O(1) since it sorts the array in-place, without requiring additional memory allocation proportional to the input size. It uses a constant amount of extra space for variables like loop counters and indices.

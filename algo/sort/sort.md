@@ -958,3 +958,77 @@ func Sleep[T Numeric](array []T) []T {
 }
 
 ```
+
+## Insertion Sort
+
+The `Insertion` function takes an integer slice called `array` as input and returns the sorted slice. The main goal of this function is to arrange the elements of the input array in ascending order using the Insertion Sort algorithm.
+
+Inside the function, `n` represents the length of the input array, which helps determine the number of elements to be sorted. The loop starts from index 1 because it assumes that the first element at index 0 is already sorted.
+
+For each element in the unsorted portion of the array (starting from index 1), the algorithm uses a variable called `key` to hold the current element being considered. The `key` variable also serves as the position where the element should be inserted if certain conditions are met during the sorting process.
+
+The `sortedIndex` variable keeps track of the index in the sorted portion of the array, which starts at `index - 1`. It represents the position of the first value in the sorted portion, which will be compared with the `key` element.
+
+The core of the algorithm involves comparing the `key` element with the elements in the sorted portion, moving them to the right until the correct position for the `key` element is found. This is achieved through a loop that continues as long as `sortedIndex` is greater than or equal to 0 and the value at the `sortedIndex` is greater than `key`.
+
+Once the correct position for the `key` element is determined, it is inserted into the sorted portion of the array at `sortedIndex + 1`. This process continues for each element in the unsorted portion until the entire array is sorted.
+
+It iterates through the array, comparing and inserting elements one by one, gradually building the sorted portion of the array from left to right. The `key` and `sortedIndex` variables play crucial roles in this process by holding the current element and tracking the position in the sorted portion, respectively.
+
+```go
+func Insertion(array []int) []int {
+    var n int = len(array)
+    // Loop through the elements of the array, starting from index 1,
+    // because at position 0, we assume the first element is already in the sorted portion.
+    for currentIndex := 1; currentIndex < n; currentIndex++ {
+        // key: Holds the current element of the array that we're comparing and potentially inserting.
+        var key int = array[currentIndex]
+        // sortedIndex: Represents the index of the last element in the sorted portion of the array,
+        // which will be compared with the key.
+        var sortedIndex int = currentIndex - 1
+        
+        // Compare the key with elements in the sorted portion and shift them to the right
+        // until we find the correct position for the key.
+        for sortedIndex >= 0 && array[sortedIndex] > key {
+            array[sortedIndex+1] = array[sortedIndex]
+            sortedIndex = sortedIndex - 1
+        }
+        // Insert the key into its correct position within the sorted portion.
+        array[sortedIndex+1] = key
+    }
+    return array
+}
+
+// Recursive
+
+
+func RecursiveInsertion(array []int) []int {
+	var n int = len(array)
+	if n <= 1 {
+		return array
+	}
+	RecursiveInsertion(array[:n-1])
+	var key int = array[n-1]
+	var j int = n - 2
+	for j >= 0 && array[j] > key {
+		array[j+1] = array[j]
+		j--
+	}
+	array[j+1] = key
+	return array
+}
+```
+
+### Time & Space Complexity
+
+| Algorithm         | Worst Case | Average Case | Best Case | Space Complexity |
+|-------------------|-------------------------|---------------------------|-----------------------|-------------------|
+| **Insertion Sort** | O(n^2)                  | O(n^2)                    | O(n)                  | O(1)              |
+
+- **Time Complexity (Worst)**: In the worst-case scenario, where the input array is in reverse order, the Insertion Sort algorithm exhibits a time complexity of O(n^2), where "n" is the number of elements in the array. This is because it requires many comparisons and shifts to sort the array.
+
+- **Time Complexity (Average)**: On average, when the input data is randomly ordered, the Insertion Sort algorithm also has a time complexity of O(n^2). It involves a similar number of comparisons and shifts as in the worst-case scenario.
+
+- **Time Complexity (Best)**: In the best-case scenario, when the input array is already nearly sorted or completely sorted, the Insertion Sort algorithm performs significantly better. In this case, the time complexity is O(n), where "n" is the number of elements. This is because only comparisons are needed, and there are no or very few shifts.
+
+- **Space Complexity**: The Insertion Sort algorithm has a space complexity of O(1), indicating that it doesn't require additional memory allocation that scales with the size of the input array. It sorts the array in-place by rearranging elements within the array itself.

@@ -11,11 +11,10 @@ type Numeric interface {
 }
 
 func main() {
-	// data := util.GenerateRandomData(10)
-	data := []int{2, 4, 6, 8, 9, 0, 1, 7, 3, 5}
+	arr := []int{12, 11, 13, 5, 6}
+	fmt.Println("Unsorted array:", arr)
 
-	arr := sort.Sleep(data)
+	array := sort.RecursiveInsertion(arr)
 
-	fmt.Printf("Sorted: %v", arr)
-
+	fmt.Println("Sorted array:", array)
 }

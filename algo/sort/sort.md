@@ -1032,3 +1032,78 @@ func RecursiveInsertion(array []int) []int {
 - **Time Complexity (Best)**: In the best-case scenario, when the input array is already nearly sorted or completely sorted, the Insertion Sort algorithm performs significantly better. In this case, the time complexity is O(n), where "n" is the number of elements. This is because only comparisons are needed, and there are no or very few shifts.
 
 - **Space Complexity**: The Insertion Sort algorithm has a space complexity of O(1), indicating that it doesn't require additional memory allocation that scales with the size of the input array. It sorts the array in-place by rearranging elements within the array itself.
+
+## Stooge Sort
+
+Stooge Sort. It is designed to sort an integer slice (array) in ascending order.
+
+1. **Initialization of `low` and `high`:** The `low` variable is initialized to 0, representing the starting index of the current sub-array, and `high` is initialized to the length of the input array, representing the ending index of the current sub-array.
+
+2. **Checking and Swapping:** There is a conditional check to compare the last element (at index `high-1`) with the first element (at index `low`) of the sub-array. If the last element is smaller than the first element, they are swapped to ensure that the smallest and largest elements are correctly positioned.
+
+3. **Calculating the Length of the SubArray:** The `length` variable is calculated to determine the size of the current sub-array. It's calculated by subtracting `low` from `high`.
+
+4. **Recursive Sorting:** If the `length` of the sub-array is greater than 2 (meaning there are more than 2 elements to sort), the algorithm proceeds with the sorting process. It divides the sub-array into three parts: the first 2/3, the last 2/3, and the first 2/3 again. Then, Stooge Sort is called recursively on these sub-arrays.
+
+5. **Returning the Sorted SubArray:** The function returns the sorted sub-array after all recursive sorting calls are complete.
+
+Stooge Sort is a recursive sorting algorithm that repeatedly divides the array into smaller sub-arrays and sorts them to eventually produce a sorted array. The conditional swapping step at the beginning ensures that the smallest and largest elements are correctly positioned, making it a sorting algorithm with a unique approach.
+
+```go
+func Stooge(array []int) []int {
+	// Initialize the low and high indices for the entire array.
+	var low int = 0
+	var high int = len(array)
+
+	// Check if the last element is smaller than the first element, swap them if needed.
+	if array[high-1] < array[low] {
+		temp := array[low]
+		array[low] = array[high-1]
+		array[high-1] = temp
+	}
+
+	// Calculate the length of the current sub-array.
+	length := high - low
+
+	// Check if there are more than 2 elements in the sub-array.
+	if length > 2 {
+		// Calculate one-third of the length.
+		third := length / 3
+
+		// Recursively sort the first 2/3 of the sub-array.
+		Stooge(array[low : high-third])
+
+		// Recursively sort the last 2/3 of the sub-array.
+		Stooge(array[low+third : high])
+
+		// Recursively sort the first 2/3 of the sub-array again.
+		Stooge(array[low : high-third])
+	}
+
+	// Return the sorted sub-array.
+	return array
+}
+```
+
+### Time & Space Complexity
+
+| Complexity Type        | Time Complexity           |
+|------------------------|---------------------------|
+| Worst-case            | O(n^(log 3 / log 1.5))     |
+| Best-case             | O(n^(log 3 / log 1.5))     |
+| Average-case          | O(n^(log 3 / log 1.5))     |
+| Space Complexity     | O(log n)       |
+
+Explanation:
+
+- **Space Complexity:** The space complexity of Stooge Sort is O(log n). This represents the amount of additional memory used by the algorithm for the recursive function call stack. The space complexity is relatively low and does not depend on the size of the input array.
+
+- **Time Complexity:** The time complexity of Stooge Sort is not efficient. It can be expressed as O(n^(log 3 / log 1.5)), which is roughly equivalent to O(n^2.7095). This makes Stooge Sort impractical for sorting large datasets because it has a high time complexity.
+
+- **Worst-case time complexity:** The worst-case time complexity of Stooge Sort is O(n^(log 3 / log 1.5)), which is roughly equivalent to O(n^2.7095). This means that in the worst-case scenario, when the array is in the reverse order, the algorithm exhibits very poor performance.
+
+- **Best-case time complexity:** The best-case time complexity is also O(n^(log 3 / log 1.5)), which is the same as the worst-case time complexity. This is because Stooge Sort always performs the same number of comparisons and swaps, regardless of the initial order of the array.
+
+- **Average-case time complexity:** The average-case time complexity of Stooge Sort is also O(n^(log 3 / log 1.5)). Like the best-case scenario, the algorithm's performance remains consistently poor on average for various input data distributions.
+
+Stooge Sort has a poor time complexity in all cases, making it one of the least efficient sorting algorithms. It is typically used for educational purposes to demonstrate sorting algorithms' concepts rather than for practical sorting tasks. For real-world applications, more efficient sorting algorithms like Quick Sort, Merge Sort, or Heap Sort are preferred.

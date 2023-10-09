@@ -11,10 +11,10 @@ type Numeric interface {
 }
 
 func main() {
-	arr := []int{12, 11, 13, 5, 6}
+	arr := []int{12, 11, 13, 5, 6,5,2,23,5,3}
 	fmt.Println("Unsorted array:", arr)
 
-	array := sort.RecursiveInsertion(arr)
+	array := sort.Stooge(arr)
 
 	fmt.Println("Sorted array:", array)
 }

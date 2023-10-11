@@ -1107,3 +1107,98 @@ Explanation:
 - **Average-case time complexity:** The average-case time complexity of Stooge Sort is also O(n^(log 3 / log 1.5)). Like the best-case scenario, the algorithm's performance remains consistently poor on average for various input data distributions.
 
 Stooge Sort has a poor time complexity in all cases, making it one of the least efficient sorting algorithms. It is typically used for educational purposes to demonstrate sorting algorithms' concepts rather than for practical sorting tasks. For real-world applications, more efficient sorting algorithms like Quick Sort, Merge Sort, or Heap Sort are preferred.
+
+## Merge Sort
+
+1. The `mergeSort` function takes an integer slice as input and sorts it using the Merge Sort algorithm.
+
+2. We start by checking if the input array is nil or contains only one element. If it is, there's nothing to sort, so we return immediately.
+
+3. We calculate the middle index, `mid`, of the array.
+
+4. We create two slices, `left` and `right`, to hold the left and right halves of the array.
+
+5. We copy the elements from the original array into the `left` and `right` slices, splitting the array into two halves.
+
+6. We recursively call `mergeSort` on both the `left` and `right` slices to sort them.
+
+7. We initialize variables `i`, `j`, and `k` to keep track of the indices while merging.
+
+8. We merge the sorted `left` and `right` slices back into the original array. We compare the elements at indices `i` and `j` and place the smaller element in the original array at index `k`. We increment `i` or `j` as necessary and continue until we've merged all elements.
+
+9. Finally, we collect any remaining elements from the `left` and `right` slices and place them in the original array.
+
+```go
+// mergeSort sorts the input slice using the Merge Sort algorithm.
+func Merge(arr []int) []int {
+    // Check if the input array is nil or empty.
+    if arr == nil || len(arr) <= 1 {
+        return arr
+    }
+
+    // Calculate the middle index of the array.
+    mid := len(arr) / 2
+
+    // Split the array into two halves: left and right.
+    var left []int= make([]int, mid)
+    var right []int = make([]int, len(arr)-mid)
+
+    // Copy elements from the original array to the left and right arrays.
+    for i := 0; i < mid; i++ {
+        left[i] = arr[i]
+    }
+    for i := mid; i < len(arr); i++ {
+        right[i-mid] = arr[i]
+    }
+
+    // Recursively sort the left and right halves.
+    Merge(left)
+    Merge(right)
+
+	var i int = 0
+	var j int = 0
+	var k int = 0
+
+    // Merge the sorted left and right arrays back into the original array.
+    for i < len(left) && j < len(right) {
+        if left[i] < right[j] {
+            arr[k] = left[i]
+            i++
+        } else {
+            arr[k] = right[j]
+            j++
+        }
+        k++
+    }
+
+    // Collect any remaining elements from the left and right arrays.
+    for i < len(left) {
+        arr[k] = left[i]
+        i++
+        k++
+    }
+    for j < len(right) {
+        arr[k] = right[j]
+        j++
+        k++
+    }
+	return arr
+}
+```
+
+### Time & Space Complexity
+
+| Complexity Type | Worst Case  | Average Case | Best Case | Space Complexity |
+|-----------------|-------------|--------------|-----------|------------------|
+| Time Complexity | O(n log n)  | O(n log n)   | O(n log n)| O(n)            |
+| Space Complexity| O(n)        | O(n)         | O(n)      | O(n)            |
+
+- **Time Complexity**:
+  - Worst Case: O(n log n) - The worst-case time complexity occurs when we have to repeatedly split and merge the array until it's fully sorted.
+  - Average Case: O(n log n) - The average-case time complexity is also O(n log n), making Merge Sort efficient on average.
+  - Best Case: O(n log n) - Merge Sort doesn't have a best-case scenario where it performs significantly better because it always divides and conquers.
+
+- **Space Complexity**:
+  - Space Complexity: O(n) - Merge Sort has a space complexity of O(n) because it requires additional memory for creating temporary arrays during the merge process. This makes it less memory-efficient compared to some other sorting algorithms.
+
+Merge Sort is known for its stability and consistent performance across different input scenarios, but it may not be the best choice when memory usage is a critical concern due to its space complexity.

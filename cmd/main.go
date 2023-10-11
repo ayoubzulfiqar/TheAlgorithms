@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/ayoubzulfiqar/TheAlgorithms/algo/sort"
+	util "github.com/ayoubzulfiqar/TheAlgorithms/utils"
 )
 
 type Numeric interface {
@@ -11,10 +13,29 @@ type Numeric interface {
 }
 
 func main() {
-	arr := []int{12, 11, 13, 5, 6,5,2,23,5,3}
-	fmt.Println("Unsorted array:", arr)
+	ms, us := MeasureExecutionTime()
+	fmt.Printf("Execution time in milliseconds: %d ms\n", ms)
+	fmt.Printf("Execution time in microseconds: %d µs\n", us)
+}
 
-	array := sort.Stooge(arr)
+// Function to measure execution time
+func MeasureExecutionTime() (time.Duration, time.Duration) {
+	startTime := time.Now()
 
-	fmt.Println("Sorted array:", array)
+	// Call the function you want to measure
+	arr := util.GenerateInt(1000000)
+	// arr := []int{1, 3, 5, 7, 8, 0, 2, 4, 6, 9}
+	// fmt.Printf("Unsorted %v\n", arr)
+
+	sort.Merge(arr)
+	// fmt.Printf("Sorted %v\n", array)
+
+	endTime := time.Now()
+
+	// Calculate the duration in milliseconds, microseconds, and minutes
+	duration := endTime.Sub(startTime)
+	durationMilliseconds := duration / time.Millisecond
+	durationMicroseconds := duration / time.Microsecond
+
+	return durationMilliseconds, durationMicroseconds
 }

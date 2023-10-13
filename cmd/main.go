@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/ayoubzulfiqar/TheAlgorithms/algo/sort"
-	util "github.com/ayoubzulfiqar/TheAlgorithms/utils"
 )
 
 type Numeric interface {
@@ -23,12 +22,12 @@ func MeasureExecutionTime() (time.Duration, time.Duration) {
 	startTime := time.Now()
 
 	// Call the function you want to measure
-	arr := util.GenerateInt(1000000)
-	// arr := []int{1, 3, 5, 7, 8, 0, 2, 4, 6, 9}
-	// fmt.Printf("Unsorted %v\n", arr)
+	// arr := util.GenerateInt(1000000)
+	arr := []int{1, 3, 5, 7, 8, 0, 2, 4, 6, 9}
+	fmt.Printf("Unsorted %v\n", arr)
 
-	sort.Merge(arr)
-	// fmt.Printf("Sorted %v\n", array)
+	array := sort.Quick(arr)
+	fmt.Printf("Sorted %v\n", array)
 
 	endTime := time.Now()
 

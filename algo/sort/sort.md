@@ -1202,3 +1202,145 @@ func Merge(arr []int) []int {
   - Space Complexity: O(n) - Merge Sort has a space complexity of O(n) because it requires additional memory for creating temporary arrays during the merge process. This makes it less memory-efficient compared to some other sorting algorithms.
 
 Merge Sort is known for its stability and consistent performance across different input scenarios, but it may not be the best choice when memory usage is a critical concern due to its space complexity.
+
+## Quick Sort
+
+Quick Sort is a popular sorting algorithm that follows the divide-and-conquer paradigm. It works by selecting a 'pivot' element from the array and partitioning the other elements into two sub-arrays, according to whether they are less than or greater than the pivot. The sub-arrays are then sorted recursively.
+
+1. **Choose a Pivot**: Select a pivot element from the array. There are different strategies for selecting the pivot, such as choosing the first element, the last element, or a random element.
+
+2. **Partitioning**: Reorder the array so that all elements with values less than the pivot come before all elements greater than the pivot. This is often done in a way that the pivot ends up in its correct sorted position. You'll need to create two sub-arrays, one containing elements less than the pivot and the other containing elements greater than the pivot.
+
+3. **Recursion**: Recursively sort the sub-arrays created in the previous step. Continue this process for both the sub-array of elements less than the pivot and the sub-array of elements greater than the pivot.
+
+4. **Combine**: After all recursive calls return, the smaller and greater sub-arrays will be sorted. You can then combine these arrays with the pivot element to get the final sorted array.
+
+5. **Base Case**: Ensure you have a base case or condition that terminates the recursion, such as when the array has only one or zero elements (already sorted).
+
+```go
+
+/*
+
+	In-Place Sorting:
+	The algorithm sorts the array in-place without using additional memory for temporary arrays.
+
+*/
+func Quick(array []int) []int {
+	if len(array) < 2 {
+		return array
+	}
+
+	pivotIndex := partition(array, 0, len(array)-1)
+
+	Quick(array[:pivotIndex])
+	Quick(array[pivotIndex+1:])
+
+	return array
+}
+
+/*
+
+
+   Three-Way Partitioning:
+   In the partition function, elements equal to the pivot are not repeatedly compared.
+   Instead, they are placed on the correct side of the pivot, reducing unnecessary comparisons
+
+
+
+*/
+func partition(arr []int, low int, high int) int {
+	// Selecting Random Pivot: Why?
+
+	/*
+
+		Randomized Pivot Selection:
+		Instead of choosing the pivot as the first or last element,we select a random pivot.
+		This helps to mitigate the worst-case scenarios where the input data is already partially sorted.
+
+		Tail Recursion Elimination:
+		The code avoids unnecessary recursion on the smaller sub-array by using a while loop for the tail end of the recursion.
+
+	*/
+
+	var pivotIndex int = rand.Intn(high - low + 1)
+	// Swapping the Pivot Index with  highest Element inside the array
+	arr[pivotIndex], arr[high] = arr[high], arr[pivotIndex]
+	// setting the highest element inside the array as pivot
+	var pivot int = arr[high]
+	var index int = low - 1
+
+	for i := low; i < high; i++ {
+		if arr[i] <= pivot {
+			index++
+			arr[index], arr[i] = arr[i], arr[index]
+		}
+	}
+	// Place the pivot element in its correct position
+	arr[index+1], arr[high] = arr[high], arr[index+1]
+
+	return index + 1
+}
+
+// Iterative Quick Sort
+
+func Quick(array []int) []int {
+	// if the array have only 1 or no element
+	if len(array) < 2 {
+		panic("Can't be Sorted: Less than Two Element")
+	}
+
+	stack := []int{0, len(array) - 1}
+
+	for len(stack) > 0 {
+		high := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		low := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+
+		pivotIndex := itPartition(array, low, high)
+
+		if pivotIndex-1 > low {
+			stack = append(stack, low)
+			stack = append(stack, pivotIndex-1)
+		}
+		if pivotIndex+1 < high {
+			stack = append(stack, pivotIndex+1)
+			stack = append(stack, high)
+		}
+	}
+	return array
+}
+
+// Iterative Partition Function
+func itPartition(array []int, low, high int) int {
+	// set the highest like the far most element inside the array as the pivot
+	pivot := array[high]
+	index := low - 1
+	// loop through the array start to end
+	for j := low; j < high; j++ {
+		// if the element inside the array is the smaller than we will swap
+		if array[j] <= pivot {
+			index++
+			// swap the element at the correct index
+			array[index], array[j] = array[j], array[index]
+		}
+	}
+	// swapping the sorted index and placing it to the right position
+	array[index+1], array[high] = array[high], array[index+1]
+	return index + 1
+}
+```
+
+### Space & Time Complexity
+
+| Case       | Time Complexity              | Space Complexity |
+|------------|------------------------------|-------------------|
+| Best       | O(n log n)                   | O(log n)          |
+| Average    | O(n log n)                   | O(log n)          |
+| Worst      | O(n^2)                       | O(n)              |
+
+- **Best Case:** Occurs when the pivot chosen at each step divides the array into nearly equal halves, leading to a balanced partitioning. In this case, Quick Sort has a time complexity of O(n log n) and a space complexity of O(log n).
+
+- **Average Case:** On average, Quick Sort performs with a time complexity of O(n log n) and a space complexity of O(log n).
+
+- **Worst Case:** Occurs when the pivot is consistently chosen poorly, causing the partitioning to be highly unbalanced. In this case, Quick Sort may have a time complexity of O(n^2), and it uses O(n) space for the call stack.

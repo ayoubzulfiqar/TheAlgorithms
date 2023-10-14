@@ -94,10 +94,8 @@ func Pigeon[T Numeric](array []T) ([]T, error) {
 		return nil, errors.New("The Provided Array is Empty")
 	}
 	// Finding min and max with the help of helper function
-	minValue, maxValue, minMaxErr := findMinMax(array)
-	if minMaxErr != nil {
-		return nil, minMaxErr
-	}
+	minValue, maxValue := findMinMax(array)
+
 	// Range of possible value - because This determine the Amount of bucket needed for the Collection
 	var rangeOfValue T = maxValue - minValue + 1
 	// we will create pigeon Holes based on range of value for possible collection of the Values
@@ -134,29 +132,4 @@ func Pigeon[T Numeric](array []T) ([]T, error) {
 	}
 
 	return array, nil
-}
-
-// Finding the min and max value inside the Unsorted Array
-func findMinMax[T Numeric](array []T) (T, T, error) {
-	// base case - if our array has nothing that It will return Nothing
-	if len(array) == 0 {
-		return T(0), T(0), errors.New("The Array is Empty: Nothing Found")
-	}
-
-	// Lets Assume that that the First element in the array is the min and also max
-
-	var maxValue T = array[0]
-	var minValue T = array[0]
-	// We iterate though each and every value inside the array and compare it and assign the correct
-	// and corresponding value to min and max
-	for _, num := range array {
-		if num < minValue {
-			minValue = num
-		}
-		if num > maxValue {
-			maxValue = num
-		}
-	}
-
-	return minValue, maxValue, nil
 }

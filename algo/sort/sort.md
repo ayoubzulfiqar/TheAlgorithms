@@ -1629,3 +1629,97 @@ func shuffle(arr []int) {
   - The space complexity of Three-Way Quick Sort is O(log n) for the stack space used in the recursive calls. This is due to the partitioning and recursive nature of the algorithm. In the best case, the stack depth is logarithmic, and in the worst case, it can approach linear space usage.
 
 Please note that these complexities can vary depending on the implementation and pivot selection strategy used. The provided complexities are based on the commonly used Lomuto partition scheme and randomized pivot selection for optimal performance.
+
+## Counting Sort
+
+Counting Sort is a non-comparative sorting algorithm that works well for a range of input values, such as integers. It's a stable sorting algorithm, which means that it maintains the relative order of equal elements in the sorted output.
+
+1. **Find the range of input**: Determine the range of values in the input data. You need to know the minimum and maximum values to allocate an appropriate amount of memory for the counting array.
+
+2. **Initialize the counting array**: Create a counting array with a size equal to the range of values. Each element in the counting array will store the count of occurrences of a particular value in the input data. Initialize all the counting array elements to zero.
+
+3. **Count occurrences**: Loop through the input data and, for each element, increment the corresponding index in the counting array. This step counts how many times each unique value appears in the input.
+
+4. **Accumulate counts**: Modify the counting array so that each element at index `i` contains the sum of the counts from indices 0 to `i`. This step helps in determining the final position of each element in the sorted output.
+
+5. **Create the output array**: Create an output array with the same size as the input data.
+
+6. **Populate the output array**: Iterate through the input data in reverse order. For each element, look up its value in the counting array to find its correct position in the output array. Place the element in that position and decrement the count in the counting array to account for the placement.
+
+7. **Repeat step 6 for all elements**: Continue this process for all elements in the input data, working from right to left. This ensures stability in the sorting algorithm, preserving the relative order of elements with the same values.
+
+8. **Final output**: After processing all elements, your output array will be sorted.
+
+9. **Time and space complexity**: Counting Sort has a time complexity of O(n + k), where n is the number of elements in the input and k is the range of input values. It is a linear time sorting algorithm and can be very efficient when the range of values is not significantly larger than the number of elements. The space complexity is O(k) for the counting array.
+
+Keep in mind that Counting Sort is most effective when dealing with integers or a limited range of discrete values. It's not suitable for sorting data with a wide or continuous range of values.
+
+```go
+func Counting(arr []int) []int {
+	if len(arr) <= 1 {
+		return arr
+	}
+
+	// Find the maximum value in the input array
+	max := arr[0]
+	for _, num := range arr {
+		if num > max {
+			max = num
+		}
+	}
+
+	// Initialize the counting array and output array
+	counts := make([]int, max+1)
+	output := make([]int, len(arr))
+
+	// Count the occurrences of each element
+	for _, num := range arr {
+		counts[num]++
+	}
+
+	// Calculate the cumulative counts
+	for i := 1; i <= max; i++ {
+		counts[i] += counts[i-1]
+	}
+
+	// Build the sorted output array
+	for i := len(arr) - 1; i >= 0; i-- {
+		output[counts[arr[i]]-1] = arr[i]
+		counts[arr[i]]--
+	}
+
+	return output
+}
+```
+
+### Time and Space Complexity
+
+| Case      | Time Complexity    | Space Complexity   |
+|-----------|--------------------|--------------------|
+| Worst     | O(n + k)           | O(n + k)           |
+| Best      | O(n + k)           | O(n + k)           |
+| Average   | O(n + k)           | O(n + k)           |
+
+- "n" represents the number of elements in the input array.
+- "k" represents the range of input values (the difference between the maximum and minimum values).
+- Counting Sort has a linear time complexity, O(n + k), and a space complexity of O(n + k) for all cases (worst, best, and average).
+
+**Time Complexity:**
+Counting Sort has a linear time complexity of O(n + k), where "n" is the number of elements in the input array, and "k" is the range of input values.
+
+- **Best-case time complexity (O(n + k)):** The best-case scenario occurs when the range of input values (k) is small and relatively constant compared to the number of elements (n). In this case, Counting Sort performs exceptionally well, as it makes only one pass through the input array to count the occurrences and another pass to place the elements in their sorted positions. It's faster than many other sorting algorithms, such as comparison-based algorithms like Quick Sort and Merge Sort.
+
+- **Worst-case time complexity (O(n + k)):** The worst-case scenario also has a linear time complexity. This occurs when the range of input values is significantly larger than the number of elements (k >> n). In this case, the counting array becomes very large, and the algorithm's efficiency is reduced. However, it's still faster than many comparison-based sorting algorithms in the worst case.
+
+- **Average-case time complexity (O(n + k)):** On average, Counting Sort is a linear-time algorithm. It efficiently sorts data with a relatively small range of values compared to the number of elements. This makes it a suitable choice for sorting tasks with such characteristics.
+
+**Space Complexity:**
+The space complexity of Counting Sort is also O(n + k).
+
+- The space complexity for the input array itself is O(n) because you need to store the original data.
+- The space complexity for the counting array is O(k) since it stores the count of occurrences for each unique value within the range.
+- The space complexity for the output array is O(n) because it needs to store the sorted data.
+
+The total space complexity is the sum of these components, which results in O(n + k). In practice, the space requirements depend on the range of values (k), and Counting Sort may use more memory for the counting array when dealing with a larger range.
+
+In summary, Counting Sort is an efficient linear-time sorting algorithm for sorting data with a limited range of values, making it well-suited for such scenarios.

@@ -21,21 +21,6 @@ func PanCake[T Numeric](array []T) []T {
 	return array
 }
 
-// Finding the Max Element inside the Array
-func findMax[T Numeric](array []T) int {
-	var maxIndex int = 0
-	// loop through the element of the array
-	for i := 1; i < len(array); i++ {
-		// if the element is inside the array is larger than the our max Value
-		if array[i] > array[maxIndex] {
-			// we found new larger element
-			maxIndex = i
-		}
-	}
-	return maxIndex
-
-}
-
 // This function will reverse the elements in the slice from index 0 to k inclusive.
 func flip[T Numeric](array []T, k int) []T {
 	// start : starting index of the Array

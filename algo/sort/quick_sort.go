@@ -13,7 +13,7 @@ func RecursiveQuick(array []int) []int {
 		return array
 	}
 
-	pivotIndex := partition(array, 0, len(array)-1)
+	pivotIndex := twoPartition(array, 0, len(array)-1)
 
 	RecursiveQuick(array[:pivotIndex])
 	RecursiveQuick(array[pivotIndex+1:])
@@ -25,13 +25,13 @@ func RecursiveQuick(array []int) []int {
 
 
    Three-Way Partitioning:
-   In the partition function, elements equal to the pivot are not repeatedly compared.
+   In the twoPartition function, elements equal to the pivot are not repeatedly compared.
    Instead, they are placed on the correct side of the pivot, reducing unnecessary comparisons
 
 
 
 */
-func partition(arr []int, low int, high int) int {
+func twoPartition(arr []int, low int, high int) int {
 	// Selecting Random Pivot: Why?
 
 	/*

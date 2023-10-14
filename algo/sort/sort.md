@@ -1451,3 +1451,106 @@ func ThreeWayMerge(array []int) []int {
 **Space Complexity:**
 
 The space complexity of the three-way merge sort algorithm is O(n) in the worst and average cases. This space is primarily required for creating temporary sub-arrays during the merge and the recursive call stack. In the best case, the space complexity is still O(n) because merge sort inherently requires additional space for merging. However, in practice, the space overhead is typically considered reasonable and manageable.
+
+## Three Way Quick Sort
+
+1. `ThreeWayQuick`: The main function that initiates the sorting process. It checks if the array is already sorted or contains only one element. If not, it shuffles the array to improve performance and then calls the `sort` function to perform the sorting.
+
+2. `sort`: A recursive function that sorts the array using Three-Way Quick Sort. It calls the `partition` function to separate elements into three partitions (less than, equal to, and greater than the pivot) and then recursively sorts these partitions.
+
+3. `partition`: This function separates elements into three partitions and returns the boundaries of elements that are equal to the pivot. It uses three pointers (lessThan, iter, and greaterThan) to rearrange elements.
+
+4. `shuffle`: A function that randomly shuffles the elements in the array. This helps avoid worst-case scenarios in Three-Way Quick Sort by introducing randomness when choosing the pivot.
+
+```go
+// ThreeWayQuick performs Three-Way Quick Sort on the input array.
+func ThreeWayQuick(array []int) []int {
+	// If the array is already sorted or contains only one element, no sorting is needed.
+	if len(array) < 2 {
+		return array
+	}
+
+	// Shuffle the array to improve performance, mitigating worst-case scenarios.
+	shuffle(array)
+
+	// Sort the array using the Three-Way Quick Sort algorithm.
+	array = sort(array, 0, len(array)-1)
+	return array
+}
+
+// sort is a recursive function that sorts the input array in place using Three-Way Quick Sort.
+func sort(array []int, low, high int) []int {
+	// Base case: If the high index is less than or equal to the low index, the array is sorted.
+	if high <= low {
+		return array
+	}
+
+	// Perform the partitioning step to separate elements into three partitions.
+	lessThan, greaterThan := partition(array, low, high)
+
+	// Recursively sort the partitions to the left and right of the pivot.
+	sort(array, low, lessThan-1)
+	sort(array, greaterThan+1, high)
+
+	return array
+}
+
+// partition function partitions the array into three segments and returns the boundaries of equal elements.
+func partition(array []int, low, high int) (int, int) {
+	// Initialize the lessThan, iter, and greaterThan pointers and choose the pivot element.
+	lessThan, iter, greaterThan := low, low, high
+	pivot := array[low]
+
+	// Iterate through the array and place elements into their respective partitions.
+	for iter <= greaterThan {
+		if array[iter] < pivot {
+			// Swap elements that are less than the pivot with the lessThan section.
+			array[lessThan], array[iter] = array[iter], array[lessThan]
+			lessThan++
+			iter++
+		} else if array[iter] > pivot {
+			// Swap elements that are greater than the pivot with the greaterThan section.
+			array[iter], array[greaterThan] = array[greaterThan], array[iter]
+			greaterThan--
+		} else {
+			// Skip elements that are equal to the pivot.
+			iter++
+		}
+	}
+
+	// Return the boundaries of elements equal to the pivot.
+	return lessThan, greaterThan
+}
+
+// shuffle function shuffles the array to mitigate worst-case scenarios.
+func shuffle(arr []int) {
+	// Initialize the random number generator with a seed for consistency.
+	rand.New(rand.NewSource(99))
+
+	// Iterate through the array and swap elements randomly to shuffle.
+	n := len(arr)
+	for i := n - 1; i > 0; i-- {
+		j := rand.Intn(i + 1)
+		arr[i], arr[j] = arr[j], arr[i]
+	}
+}
+```
+
+### Space and Time Complexity
+
+| Complexity              | Worst Case       | Best Case        | Average Case     |
+|-------------------------|------------------|------------------|------------------|
+| **Time Complexity**    | O(n^2)           | O(n log n)       | O(n log n)       |
+| **Space Complexity**   | O(log n)         | O(log n)         | O(log n)         |
+
+**Explanation**:
+
+- **Time Complexity**:
+  - **Worst Case**: The worst-case time complexity occurs when the pivot selection consistently results in highly imbalanced partitions (e.g., when the array is already sorted in increasing or decreasing order). In this case, the partitioning step doesn't effectively divide the array, leading to O(n^2) time complexity.
+  - **Best Case**: The best-case time complexity occurs when the pivot selection is consistently effective, leading to balanced partitions. In this scenario, the time complexity is O(n log n), which is similar to the time complexity of other efficient sorting algorithms.
+  - **Average Case**: On average, the Three-Way Quick Sort exhibits O(n log n) time complexity when considering randomized pivot selection, which leads to balanced partitions in most cases.
+
+- **Space Complexity**:
+  - The space complexity of Three-Way Quick Sort is O(log n) for the stack space used in the recursive calls. This is due to the partitioning and recursive nature of the algorithm. In the best case, the stack depth is logarithmic, and in the worst case, it can approach linear space usage.
+
+Please note that these complexities can vary depending on the implementation and pivot selection strategy used. The provided complexities are based on the commonly used Lomuto partition scheme and randomized pivot selection for optimal performance.

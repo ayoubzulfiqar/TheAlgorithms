@@ -139,6 +139,81 @@ Explanation:
 
 - **Space Complexity**: The space complexity of Bingo Sort is O(1) because it operates in-place, meaning it does not require additional memory that grows with the size of the input. It only uses a constant amount of additional memory for variables like `minIndex` and `i`.
 
+## Bogo Sort [Permutation Sort || Stupid Sort || Slow Sort || Shotgun Sort || Monkey Sort]
+
+Bogo sort is a highly inefficient and humorously impractical sorting algorithm. It is not a suitable sorting method for practical use, as its average and worst-case time complexity is factorial, which makes it incredibly slow. In Bogo sort, the algorithm repeatedly shuffles the elements in the list randomly and checks if they are sorted. This process continues until the list happens to be sorted by chance.
+
+Bogo sort uses 2 steps to sort elements of the array.
+
+1. It throws the number randomly.
+2. Check whether the number is sorted or not.
+3. If sorted then return the sorted array.
+4. Otherwise it again generate another randomization of the numbers until the array is sorted.
+
+```go
+func Bogo(array []int) []int {
+	// while until not sorted we will keep sorting until we run run out of enough life on tis earth
+	// to sustain humanity
+	for !isSorted(array) {
+		// shuffle the array if not sorted
+		shuffle(array)
+	}
+	return array
+}
+
+func isSorted(array []int) bool {
+	// looping through the elements of the array
+	for i := 1; i < len(array); i++ {
+		// if the element at index 0 is greater than the next one
+		if array[i-1] > array[i] {
+			// means not sorted
+			return false
+		}
+	}
+	// else sorted [almost]
+	return true
+}
+
+// shuffle function shuffles the array to mitigate worst-case scenarios.
+func shuffle(arr []int) {
+	// Initialize the random number generator with a seed for consistency.
+	rand.New(rand.NewSource(99))
+
+	// Iterate through the array and swap elements randomly to shuffle.
+	n := len(arr)
+	for i := n - 1; i > 0; i-- {
+		j := rand.Intn(i + 1)
+		arr[i], arr[j] = arr[j], arr[i]
+	}
+}
+```
+
+### Space and Time Complexity
+
+| Complexity       | Time                  | Space   |
+| ---------------- | --------------------- | ------- |
+| **Worst-case**   | O((n+1)!)             | O(n)    |
+| **Best-case**    | O(n)                  | O(n)    |
+| **Average-case** | O((n+1)!/2)           | O(n)    |
+
+**Time Complexity:**
+
+1. **Worst-case Time Complexity (O((n+1)!)):** The worst-case time complexity for Bogo Sort is extremely high and impractical. It is represented as O((n+1)!), where "n" is the number of elements in the array. This means that the time it takes to sort the array increases factorially with the number of elements. For even moderately-sized arrays, this time complexity makes Bogo Sort prohibitively slow. In the worst case, Bogo Sort may take an extremely long time to sort an array or even never complete due to its randomized nature.
+
+2. **Best-case Time Complexity (O(n)):** The best-case time complexity occurs when, by sheer luck, the input array is already sorted. In this scenario, Bogo Sort has a time complexity of O(n), which is linear. This happens because the algorithm checks if the array is sorted and, in the best case, it immediately recognizes that the array is sorted and terminates.
+
+3. **Average-case Time Complexity (O((n+1)!/2)):** The average-case time complexity of Bogo Sort is also highly inefficient. It is estimated to be approximately O((n+1)!/2), which is still factorial but on average, it takes half the time of the worst case. However, Bogo Sort's randomized nature makes it highly unpredictable, so the actual time it takes to sort an array can vary widely.
+
+**Space Complexity:**
+
+The space complexity of Bogo Sort is relatively simple:
+
+- **Space Complexity (O(n)):** Bogo Sort has a space complexity of O(n), where "n" is the number of elements in the array. This space complexity is primarily due to the storage of the input array and temporary variables used in the shuffling and sorting process. The space required for Bogo Sort is linear and directly proportional to the size of the input array.
+
+In summary, Bogo Sort is a highly impractical sorting algorithm with abysmally high worst-case and average-case time complexities, making it unsuitable for any real-world sorting task. It is used more as a humorous or educational example rather than for practical sorting. More efficient sorting algorithms should be used in real applications.
+
+Please note that these complexities are for theoretical purposes and are based on the random shuffling of the elements. In practice, Bogo Sort is never a reasonable choice for sorting due to its extreme inefficiency.
+
 ## Pigeon Sort
 
 First is to find the Min and Max value inside the Unsorted Array then Calculate the Range of possible value by subtracting the Min Value inside the Unsorted Array by Max value Calculation of the range is because This determine the Amount of bucket needed for the Collection of Values inside the array then create an bucket array (pigeon holes) adn place the value of the original array inside that bucket then Iterate though the range of values and based on the the bucket hole index we will start adding the value inside the original array because it will be getting sorted starting at the beginning and do it step by step while emptying the pigeon hole bucket until nothing left

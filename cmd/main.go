@@ -12,13 +12,15 @@ type Numeric interface {
 }
 
 func main() {
-	ms, us := MeasureExecutionTime()
+	ms, us, s := MeasureExecutionTime()
 	fmt.Printf("Execution time in milliseconds: %d ms\n", ms)
 	fmt.Printf("Execution time in microseconds: %d µs\n", us)
+	fmt.Printf("Execution time in seconds: %d s\n", s)
+
 }
 
 // Function to measure execution time
-func MeasureExecutionTime() (time.Duration, time.Duration) {
+func MeasureExecutionTime() (time.Duration, time.Duration, time.Duration) {
 	startTime := time.Now()
 
 	// Call the function you want to measure
@@ -26,7 +28,7 @@ func MeasureExecutionTime() (time.Duration, time.Duration) {
 	arr := []int{1, 3, 5, 7, 8, 0, 2, 4, 6, 9}
 	fmt.Printf("Unsorted %v\n", arr)
 
-	array := sort.ThreeWayQuick(arr)
+	array := sort.Bogo(arr)
 	fmt.Printf("Sorted %v\n", array)
 
 	endTime := time.Now()
@@ -35,6 +37,7 @@ func MeasureExecutionTime() (time.Duration, time.Duration) {
 	duration := endTime.Sub(startTime)
 	durationMilliseconds := duration / time.Millisecond
 	durationMicroseconds := duration / time.Microsecond
+	durationSeconds := duration / time.Second
 
-	return durationMilliseconds, durationMicroseconds
+	return durationMilliseconds, durationMicroseconds, durationSeconds
 }

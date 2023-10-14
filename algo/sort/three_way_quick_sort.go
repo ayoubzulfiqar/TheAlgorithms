@@ -1,9 +1,5 @@
 package sort
 
-import (
-	"math/rand"
-)
-
 // ThreeWayQuick performs Three-Way Quick Sort on the input array.
 func ThreeWayQuick[T Numeric](array []T) []T {
 	// If the array is already sorted or contains only one element, no sorting is needed.
@@ -61,17 +57,4 @@ func partition[T Numeric](array []T, low, high int) (int, int) {
 
 	// Return the boundaries of elements equal to the pivot.
 	return lessThan, greaterThan
-}
-
-// shuffle function shuffles the array to mitigate worst-case scenarios.
-func shuffle[T Numeric](arr []T) {
-	// Initialize the random number generator with a seed for consistency.
-	rand.New(rand.NewSource(99))
-
-	// Iterate through the array and swap elements randomly to shuffle.
-	n := len(arr)
-	for i := n - 1; i > 0; i-- {
-		j := rand.Intn(i + 1)
-		arr[i], arr[j] = arr[j], arr[i]
-	}
 }

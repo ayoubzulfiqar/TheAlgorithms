@@ -1344,3 +1344,110 @@ func itPartition(array []int, low, high int) int {
 - **Average Case:** On average, Quick Sort performs with a time complexity of O(n log n) and a space complexity of O(log n).
 
 - **Worst Case:** Occurs when the pivot is consistently chosen poorly, causing the partitioning to be highly unbalanced. In this case, Quick Sort may have a time complexity of O(n^2), and it uses O(n) space for the call stack.
+
+## Three Way Merge Sort
+
+The `merge` function is responsible for merging the three sub-arrays—left, middle, and right—into a single sorted array. It does so by comparing elements from these sub-arrays and selecting the smallest one at each step, ensuring the overall array is sorted correctly.
+
+The `ThreeWayMerge` function is the entry point of the sorting process. It first checks if the length of the input array is greater than one, and if so, it proceeds with the sorting. The input array is divided into three parts: `left`, `middle`, and `right`. These sub-arrays are created and populated with the corresponding elements from the original array. The `ThreeWayMerge` function then recursively sorts the `left`, `middle`, and `right` sub-arrays.
+
+The sorted sub-arrays are then merged back together into the original array by calling the `merge` function. This process continues until the entire input array is sorted, and the final sorted array is returned. The code uses recursive calls to sort the sub-arrays and an iterative merging process to ensure the elements are arranged in the correct order, resulting in a fully sorted array.
+
+```go
+func merge(array []int, left []int, middle []int, right []int) []int {
+	var i int = 0
+	var j int = 0
+	var k int = 0
+	//  Loop until we've processed all elements in left, middle, and right
+	for i < len(left) || j < len(middle) || k < len(right) {
+		/*
+
+			i < len(left) checks if there are remaining elements in the left sub-array to consider for merging.
+
+			(j == len(middle) || left[i] <= middle[j]) checks if either the middle sub-array is fully processed
+			(j equals its length) or if the current element in the left sub-array is smaller than or equal to
+			the current element in the middle sub- array.
+
+			(k == len(right) || left[i] <= right[k]) checks if either the right sub-array is fully processed
+			(k equals its length) or if the current element in the left sub-array is smaller than or equal
+			to the current element in the right sub-array.
+
+
+		*/
+		if i < len(left) && (j == len(middle) || left[i] <= middle[j]) && (k == len(right) || left[i] <= right[k]) {
+			array[i+j+k] = left[i]
+			i++
+			/*
+
+				j < len(middle) checks if there are remaining elements in the middle sub-array to consider for merging.
+
+				(k == len(right) || middle[j] <= right[k]) checks if either the right sub-array is fully processed
+				(k equals its length) or if the current element in the middle sub-array is smaller than or
+				equal to the current element in the right sub-array.
+
+
+			*/
+		} else if j < len(middle) && (k == len(right) || middle[j] <= right[k]) {
+			array[i+j+k] = middle[j]
+			j++
+			/*
+				if none of the previous conditions are met, it means that the current element in the right sub-array
+				is smaller than or equal to the elements in the left and middle sub-arrays, or both the left
+				and middle sub-arrays have been fully
+
+				In this case, the current element from the right sub-array is selected to be placed in
+				the final merged array. The element is assigned to array[i+j+k], and then k is incremented
+				to move on to the next element in the right sub-array.
+			*/
+		} else {
+			array[i+j+k] = right[k]
+			// moving on
+			k++
+		}
+	}
+	return array
+}
+
+func ThreeWayMerge(array []int) []int {
+	if len(array) > 1 {
+		mid1 := len(array) / 3
+		mid2 := 2 * len(array) / 3
+		// Split the input array into three parts: left, middle, and right
+		left := make([]int, mid1)
+		copy(left, array[:mid1])
+
+		middle := make([]int, mid2-mid1)
+		copy(middle, array[mid1:mid2])
+
+		right := make([]int, len(array)-mid2)
+		copy(right, array[mid2:])
+		// Recursively sort the left, middle, and right sub-arrays
+		ThreeWayMerge(left)
+		ThreeWayMerge(middle)
+		ThreeWayMerge(right)
+		// Merge the sorted left, middle, and right sub-arrays into the original array
+		array = merge(array, left, middle, right)
+	}
+	return array
+}
+```
+
+### Space AND Time Complexity
+
+| **Case**        | **Time Complexity** | **Space Complexity** |
+| --------------- | -------------------- | -------------------- |
+| **Worst Case**  | O(n * log n)        | O(n)                 |
+| **Best Case**   | O(n * log n)        | O(n)                 |
+| **Average Case**| O(n * log n)        | O(n)                 |
+
+**Time Complexities:**
+
+1. **Worst Case:** The worst-case time complexity of three-way merge sort is O(n * log n), where 'n' is the number of elements in the array. This occurs when the array is repeatedly divided into three parts, and each part is recursively sorted and merged. The log n factor arises from the depth of the recursive tree, and the 'n' factor comes from the merging step.
+
+2. **Best Case:** The best-case time complexity is also O(n *log n). In three-way merge sort, the number of comparisons and element movements remains the same regardless of the input order. The 'n* log n' time complexity is a fundamental characteristic of merge sort algorithms.
+
+3. **Average Case:** The average-case time complexity is O(n * log n) as well. In practice, three-way merge sort typically performs with this time complexity. The algorithm evenly divides the array into three parts, resulting in a balanced and efficient sorting process.
+
+**Space Complexity:**
+
+The space complexity of the three-way merge sort algorithm is O(n) in the worst and average cases. This space is primarily required for creating temporary sub-arrays during the merge and the recursive call stack. In the best case, the space complexity is still O(n) because merge sort inherently requires additional space for merging. However, in practice, the space overhead is typically considered reasonable and manageable.

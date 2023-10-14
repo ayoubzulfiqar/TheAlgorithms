@@ -26,7 +26,7 @@ func MeasureExecutionTime() (time.Duration, time.Duration) {
 	arr := []int{1, 3, 5, 7, 8, 0, 2, 4, 6, 9}
 	fmt.Printf("Unsorted %v\n", arr)
 
-	array := sort.Quick(arr)
+	array := sort.ThreeWayMerge(arr)
 	fmt.Printf("Sorted %v\n", array)
 
 	endTime := time.Now()

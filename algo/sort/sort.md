@@ -1821,3 +1821,67 @@ func Redix(arr []int) {
 - **Space Complexity (O(n + k)):** The space complexity for Radix Sort includes the space required for two additional arrays: `output` and `count`. Both of these arrays have sizes proportional to the number of elements in the input array (`n`). Hence, the space complexity is O(n + k), where `n` is the number of elements and `k` is the number of digits or characters in the largest element.
 
 It's important to note that Radix Sort is a stable sorting algorithm, meaning it preserves the relative order of equal elements. Despite its linear time complexity, it is not commonly used for general sorting tasks like quicksort or merge sort. Radix Sort is most suitable for sorting non-negative integers with a bounded number of digits or characters, where its performance is consistently efficient.
+
+## Bucket Sort
+
+Bucket Sort is a sorting algorithm that divides the input data into a finite number of "buckets" or bins, and then each bucket is sorted individually, either using another sorting algorithm or recursively applying the bucket sort. After all the individual buckets are sorted, their contents are concatenated to obtain the final sorted array. Here's a step-by-step guide on how to implement Bucket Sort without providing actual code:
+
+1. **Determine the Range**: To use Bucket Sort effectively, you need to know the range of the input data. This means finding the minimum and maximum values in the input array.
+
+2. **Create Buckets**: Divide the range into a fixed number of buckets. The number of buckets is typically determined by the range of values and the available memory. Each bucket should cover a specific range of values within the overall range.
+
+3. **Distribute Elements into Buckets**: Iterate through the input array, placing each element into its corresponding bucket based on the element's value. This is done by using a simple mapping function, dividing the range of values evenly between the buckets. Elements equal to the minimum value go into the first bucket, elements equal to the maximum value go into the last bucket, and the rest are distributed based on their relative position within the range.
+
+4. **Sort Each Bucket**: For each bucket, sort the elements within that bucket. You can use any sorting algorithm for this step, such as insertion sort, quicksort, or another instance of bucket sort (if you want to recursively apply bucket sort).
+
+5. **Concatenate Buckets**: After all buckets are sorted, concatenate the contents of each bucket in order to create the final sorted array. The elements from the first bucket come first, followed by the elements in the second bucket, and so on.
+
+6. **Return Sorted Array**: The concatenated array is now sorted, and you can return it as the result.
+
+7. **Time Complexity**: The time complexity of bucket sort depends on the sorting algorithm used to sort the individual buckets. The best-case time complexity is O(n) when the input is uniformly distributed across the buckets, and the worst-case time complexity is O(n^2) if all elements are placed in a single bucket. However, on average, it performs well for uniformly distributed data.
+
+8. **Space Complexity**: The space complexity of bucket sort depends on the number of buckets you use. It's typically O(n) for most practical cases.
+
+Keep in mind that the choice of the sorting algorithm for individual buckets can impact the efficiency and stability of the algorithm. Also, if you have a small range of values, you may want to use fewer buckets to avoid wasting memory.
+
+```go
+func Bucket(arr []int) []int {
+	if len(arr) <= 1 {
+		return arr
+	}
+
+	// Find the minimum and maximum values in the array
+	minValue, maxValue := findMinMax(arr)
+
+	// Create buckets
+	numBuckets := maxValue - minValue + 1
+	buckets := make([][]int, numBuckets)
+
+	// Distribute elements into buckets
+	for _, val := range arr {
+		buckets[val-minValue] = append(buckets[val-minValue], val)
+	}
+
+	// Sort each bucket (using any sorting algorithm)
+	sorted := []int{}
+	for i := 0; i < numBuckets; i++ {
+		if len(buckets[i]) > 0 {
+			buckets[i] = Insertion(buckets[i]) // Use any sorting method for the buckets
+			// - Insertion Sort we already implemented Above
+			sorted = append(sorted, buckets[i]...)
+		}
+	}
+
+	return sorted
+}
+```
+
+### Space & Time Complexity
+
+| Complexity       | Best Case      | Average Case   | Worst Case     | Space Complexity |
+|------------------|----------------|----------------|----------------|------------------|
+| Time Complexity  | O(n+k) (with k as the number of buckets) | O(n^2) | O(n^2) | O(n+k) (for the buckets) |
+|                  |               | O(n^2) when all elements end up in a single bucket | O(n^2) when all elements end up in a single bucket |                  |
+|                  |               | (assuming a simple sort is used for buckets) | (assuming a simple sort is used for buckets) |                  |
+
+Time complexity in the best case assumes that the elements are uniformly distributed across the buckets, resulting in a linear time complexity. The worst and average cases occur when all elements end up in a single bucket, leading to a quadratic time complexity. The space complexity depends on the number of buckets and the size of the data, resulting in O(n+k) where n is the number of elements and k is the number of buckets.

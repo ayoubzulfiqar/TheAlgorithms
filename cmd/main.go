@@ -26,10 +26,11 @@ func MeasureExecutionTime() (time.Duration, time.Duration, time.Duration) {
 	// Call the function you want to measure
 	// arr := util.GenerateInt(1000000)
 	// arr := []int{1, 3, 5, 7, 8, 0, 2, 4, 6, 9}
+	// arr := []float64{9.0, 7.0, 5.0, 11.0, 12.0, 2.0, 14.0, 3.0, 10.0, 6.0}
 	arr := []int{9, 7, 5, 11, 12, 2, 14, 3, 10, 6}
 	fmt.Printf("Unsorted %v\n", arr)
 
-	array := sort.Counting(arr)
+	array := sort.Redix(arr)
 	fmt.Printf("Sorted %v\n", array)
 
 	endTime := time.Now()

@@ -1723,3 +1723,101 @@ The space complexity of Counting Sort is also O(n + k).
 The total space complexity is the sum of these components, which results in O(n + k). In practice, the space requirements depend on the range of values (k), and Counting Sort may use more memory for the counting array when dealing with a larger range.
 
 In summary, Counting Sort is an efficient linear-time sorting algorithm for sorting data with a limited range of values, making it well-suited for such scenarios.
+
+## Redix Sort
+
+1. `getMax(arr)` function:
+   - This function finds the maximum value in the input array `arr`. It is used to determine the number of digits in the largest element, which is necessary for Radix Sort.
+
+2. `countingSort(arr, exp)` function:
+   - The `countingSort` function is used to sort the elements of the array `arr` based on a specific digit place, represented by the `exp` parameter.
+   - It creates an `output` slice of the same length as the input array to store the sorted elements.
+   - It creates a `count` slice of size 10 (since we are dealing with base-10 integers) to keep track of the count of elements with each digit.
+   - The function first loops through the input array to count the number of elements for each digit at the current place (e.g., one's place, ten's place, etc.).
+   - It then updates the `count` slice to determine the correct position for each element in the `output` slice.
+   - Finally, it loops through the input array again to place the elements in their sorted order in the `output` slice.
+
+3. `radixSort(arr)` function:
+   - The `radixSort` function is the main sorting function that takes an array as input and sorts it using Radix Sort.
+   - It first finds the maximum element in the array using the `getMax` function to determine the number of iterations required for the sorting process.
+   - The loop iterates from the least significant digit to the most significant digit, each time calling `countingSort` with the appropriate `exp` value.
+   - As the loop progresses, the array is sorted incrementally based on the current digit place. After processing all the digit places, the array is fully sorted.
+
+4. `main` function:
+   - In the `main` function, you can see an example array `arr` that you want to sort.
+   - It calls the `radixSort` function to sort the array in place.
+
+The key idea behind Radix Sort is to sort the elements by processing individual digits (or character positions) from right to left, and this process is repeated for all the digit places, starting from the least significant digit and moving to the most significant digit. This algorithm is efficient for sorting non-negative integers with a bounded number of digits and can be adapted for other data types as well.
+
+```go
+// Function to find the maximum element in the array, considering both positive and negative numbers
+func getMax(arr []int) int {
+	max := arr[0]
+	for _, value := range arr {
+		if value > max {
+			max = value
+		}
+	}
+	return max
+}
+
+// Function to perform counting sort based on a specific digit place (exp)
+func countingSort(arr []int, exp int) {
+	n := len(arr)
+	output := make([]int, n) // Create an output slice to store the sorted elements
+	count := make([]int, 19) // Create a count slice for each digit, accounting for numbers from -9 to 9
+
+	// Count the occurrences of each digit at the current place
+	for i := 0; i < n; i++ {
+		// Shift the digit range to be from 0 to 18 (for -9 to 9)
+		count[(arr[i]/exp)%10+9]++
+	}
+
+	// Calculate the positions for each element in the output
+	for i := 1; i < 19; i++ {
+		count[i] += count[i-1]
+	}
+
+	// Place the elements in their sorted order in the output slice
+	for i := n - 1; i >= 0; i-- {
+		output[count[(arr[i]/exp)%10+9]-1] = arr[i]
+		count[(arr[i]/exp)%10+9]--
+	}
+
+	// Copy the sorted elements back to the original array
+	for i := 0; i < n; i++ {
+		arr[i] = output[i]
+	}
+}
+
+// Main Radix Sort function
+func Redix(arr []int) {
+	max := getMax(arr)
+
+	// Iterate through each digit place, from least significant to most significant
+	for exp := 1; max/exp > 0; exp *= 10 {
+		countingSort(arr, exp)
+	}
+}
+
+```
+
+### Space & Time Complexity
+
+| Case      | Time Complexity | Space Complexity |
+|-----------|-----------------|------------------|
+| Worst     | O(k * n)        | O(n + k)         |
+| Best      | O(k * n)        | O(n + k)         |
+| Average   | O(k * n)        | O(n + k)         |
+
+`n` represents the number of elements in the input array, and `k` is the number of digits or characters in the largest element. The time complexity remains the same for all cases because Radix Sort is not affected by the order of elements, making it efficient in all situations. The space complexity includes the space required for the `output` and `count` arrays, both of which are proportional to `n`.
+
+- **Worst Case Time Complexity (O(k * n)):** In the worst case, Radix Sort will have to perform counting sort for each digit place (from the least significant to the most significant) for all `n` elements in the input array. This results in a time complexity of O(k * n), where `k` is the number of digits or characters in the largest element.
+
+- **Best Case Time Complexity (O(k * n)):** Radix Sort's best case is essentially the same as the worst case. Even if the input is nearly sorted, the algorithm will still go through all the digit places, making it relatively consistent.
+
+- **Average Case Time Complexity (O(k * n)):** The average case time complexity is also O(k * n). Radix Sort is not influenced by the order of elements, and it processes each digit place independently.
+
+- **Space Complexity (O(n + k)):** The space complexity for Radix Sort includes the space required for two additional arrays: `output` and `count`. Both of these arrays have sizes proportional to the number of elements in the input array (`n`). Hence, the space complexity is O(n + k), where `n` is the number of elements and `k` is the number of digits or characters in the largest element.
+
+It's important to note that Radix Sort is a stable sorting algorithm, meaning it preserves the relative order of equal elements. Despite its linear time complexity, it is not commonly used for general sorting tasks like quicksort or merge sort. Radix Sort is most suitable for sorting non-negative integers with a bounded number of digits or characters, where its performance is consistently efficient.

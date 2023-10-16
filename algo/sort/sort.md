@@ -256,7 +256,7 @@ func Selection(array []int) []int {
 }
 ```
 
-Sure, here's the time and space complexity of the optimized Selection Sort algorithm in Markdown table format:
+### Time and Space Complexity
 
 | Complexity      | Best       | Worst      | Average    | Space    |
 |-----------------|------------|------------|------------|----------|
@@ -907,6 +907,103 @@ func CockTail(array []int) []int {
 
 - **Space Complexity**:
   - Cocktail Sort is an in-place sorting algorithm, meaning it doesn't require additional memory proportional to the input size. Regardless of the input data, it uses a constant amount of extra space for variables. Therefore, the space complexity is O(1), indicating it is a space-efficient algorithm.
+
+## Strand Sort
+
+Strand Sort is a relatively simple sorting algorithm that works by repeatedly taking elements from an unsorted list and placing them into a sorted list. It's not a commonly used sorting algorithm in practice due to its inefficiency, but it's an interesting concept to understand.
+
+Here's a step-by-step guide to how Strand Sort works without providing code:
+
+1. Initialize two lists: an input list (the unsorted list) and an output list (the sorted list). Initially, the output list is empty.
+
+2. Find the smallest element in the input list and remove it. Place this element into the output list. This element is considered sorted.
+
+3. Iterate through the remaining elements in the input list, and for each element, check if it is smaller than the last element in the output list (the element you just added). If it is, remove it from the input list and add it to the end of the output list.
+
+4. Repeat step 3 until you can't find any more elements to add to the output list. This process is like building a strand of elements within the output list.
+
+5. Once you can't find any more elements to add, combine the output list with the previously sorted list. The output list becomes the new sorted list, and the input list is now the unsorted list.
+
+6. Repeat steps 2 through 5 until the input list is empty. This process effectively keeps building sorted strands of elements and combining them until the entire list is sorted.
+
+7. The algorithm terminates when the input list is empty, and the output list contains all the sorted elements.
+
+```go
+func Strand(arr []int) []int {
+	// Initialize an empty list to store the sorted elements.
+	sorted := []int{}
+
+	// Continue sorting until the input list is empty.
+	for len(arr) > 0 {
+		// Create a strand with the first element of the input list.
+		strand := []int{arr[0]}
+		arr = arr[1:]
+
+		// Iterate through the remaining elements in the input list.
+		for i := 0; i < len(arr); i++ {
+			// If the current element is greater than or equal to the last element in the strand,
+			// add it to the strand and remove it from the input list.
+			if arr[i] >= strand[len(strand)-1] {
+				strand = append(strand, arr[i])
+				arr = append(arr[:i], arr[i+1:]...)
+				i-- // Adjust the loop index to account for the removed element.
+			}
+		}
+
+		// Merge the sorted strand into the overall sorted list.
+		sorted = strandMerge(sorted, strand)
+	}
+
+	// Return the final sorted list.
+	return sorted
+}
+
+func strandMerge(a, b []int) []int {
+	// Create a merged list with enough capacity to hold all elements from a and b.
+	result := make([]int, len(a)+len(b))
+
+	// Continue merging until both lists are empty.
+	for len(a) > 0 && len(b) > 0 {
+		// Compare the first elements of a and b.
+		if a[0] > b[0] {
+			// Append the smaller element to the merged list and remove it from a.
+			result = append(result, a[0])
+			a = a[1:]
+		} else {
+			// Append the smaller element to the merged list and remove it from b.
+			result = append(result, b[0])
+			b = b[1:]
+		}
+	}
+
+	// Append any remaining elements from a and b to the merged list (if any).
+	result = append(result, a...)
+	result = append(result, b...)
+
+	// Return the merged list containing all elements from a and b in sorted order.
+	return result
+}
+```
+
+### Space and Time Complexity
+
+| Complexity Type     | Time Complexity          | Space Complexity  |
+|---------------------|--------------------------|-------------------|
+| Worst-Case          | O(n^2)                   | O(n)              |
+| Best-Case           | O(n)                     | O(n)              |
+| Average-Case        | O(n^2)                   | O(n)              |
+
+**Time Complexity:**
+
+- Worst-Case Time Complexity (O(n^2)): In the worst-case scenario, when the input list is in reverse order, Strand Sort will exhibit its worst performance. This is because it repeatedly creates new strands, which results in nested loops and excessive merging. As a result, the time complexity becomes quadratic, O(n^2), where "n" is the number of elements in the input list.
+
+- Best-Case Time Complexity (O(n)): In the best-case scenario, when the input list is already sorted or nearly sorted, the algorithm performs more efficiently. It can build strands without extensive merging, resulting in a linear time complexity, O(n).
+
+- Average-Case Time Complexity (O(n^2)): The average-case time complexity of Strand Sort is generally closer to the worst-case scenario due to its nature of frequently building and merging strands. This makes it inefficient for most practical sorting tasks.
+
+**Space Complexity:**
+
+- Space Complexity (O(n)): Strand Sort uses space for two lists, the input list, and the output list (sorted list). The space complexity is linear, O(n), as it stores a copy of the input list and the output list, each with "n" elements. Additionally, some temporary storage is needed for strands and merging.
 
 ## PanCake Sort
 

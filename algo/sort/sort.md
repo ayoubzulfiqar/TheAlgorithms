@@ -214,6 +214,63 @@ In summary, Bogo Sort is a highly impractical sorting algorithm with abysmally h
 
 Please note that these complexities are for theoretical purposes and are based on the random shuffling of the elements. In practice, Bogo Sort is never a reasonable choice for sorting due to its extreme inefficiency.
 
+## Selection Sort
+
+1. **Initialize**: Start with an unsorted array of elements that you want to sort. This array can be of any data type, but for simplicity, let's assume you're sorting an integer slice.
+
+2. **Outer Loop**: Use an outer loop that iterates from the beginning of the array to the second-to-last element. You can use a loop variable `i` to keep track of the current index.
+
+3. **Find Minimum**: Inside the outer loop, initialize a variable to store the index of the minimum element. This index starts as `i` because initially, the minimum element is assumed to be at the `i`-th position.
+
+4. **Inner Loop**: Start another loop using a separate variable (e.g., `j`) that iterates from `i+1` to the end of the array. This inner loop is used to find the index of the minimum element in the unsorted part of the array.
+
+5. **Compare**: In the inner loop, compare the element at index `j` with the element at the index stored in the "minimum index" variable. If the element at index `j` is smaller, update the "minimum index" to `j`.
+
+6. **Swap (if necessary)**: After the inner loop, if the "minimum index" is not equal to `i`, it means a smaller element has been found in the unsorted part of the array. Swap the element at index `i` with the element at the "minimum index."
+
+7. **Repeat**: Continue this process by incrementing the outer loop variable `i` and repeating steps 3 to 6. The outer loop will continue until `i` reaches the second-to-last element of the array.
+
+8. **Result**: Once the outer loop completes, your array is sorted in ascending order.
+
+```go
+func Selection(array []int) []int {
+	// looping through the whole array
+	for i := 0; i < len(array)-1; i++ {
+		// assuming the element in the array is min
+		var minIndex int = i
+		// looping though the array and checking step by step one at a time and compare it if it is minimum
+		for j := i + 1; j < len(array); j++ {
+			// element at position at j is less than like minimum to the previous value
+			for array[j] < array[minIndex] {
+				// we set it as our next min
+				minIndex = j
+			}
+		}
+		// if the are not same
+		if minIndex != i {
+			// than Swap if necessary
+			array[i], array[minIndex] = array[minIndex], array[i]
+		}
+	}
+	return array
+}
+```
+
+Sure, here's the time and space complexity of the optimized Selection Sort algorithm in Markdown table format:
+
+| Complexity      | Best       | Worst      | Average    | Space    |
+|-----------------|------------|------------|------------|----------|
+| Time Complexity | O(n^2)     | O(n^2)     | O(n^2)     | O(1)     |
+| Space Complexity| O(1)       | O(1)       | O(1)       | O(1)     |
+
+- **Time Complexity**:
+  - Best Case: O(n^2) - Occurs when the array is already sorted in ascending order, and no swaps are needed.
+  - Worst Case: O(n^2) - Occurs when the array is sorted in descending order, resulting in the maximum number of comparisons and swaps.
+  - Average Case: O(n^2) - On average, the algorithm requires n^2/2 comparisons and n/2 swaps.
+  
+- **Space Complexity**:
+  - The space complexity is constant, O(1), because the algorithm only uses a fixed amount of extra memory for variables, regardless of the input size.
+
 ## Pigeon Sort
 
 First is to find the Min and Max value inside the Unsorted Array then Calculate the Range of possible value by subtracting the Min Value inside the Unsorted Array by Max value Calculation of the range is because This determine the Amount of bucket needed for the Collection of Values inside the array then create an bucket array (pigeon holes) adn place the value of the original array inside that bucket then Iterate though the range of values and based on the the bucket hole index we will start adding the value inside the original array because it will be getting sorted starting at the beginning and do it step by step while emptying the pigeon hole bucket until nothing left

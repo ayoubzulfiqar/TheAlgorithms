@@ -15,8 +15,6 @@
 | Bitonic Sort              | Moderate             |
 | Pancake Sorting           | Moderate             |
 | Sleep Sort                | Moderate             |
-| Structure Sorting         | Moderate             |
-| Tag Sort (To get both sorted and original) | Moderate |
 | Selection Sort            | Moderate             |
 | Insertion Sort            | Moderate             |
 | Tree Sort                 | Moderate             |
@@ -59,9 +57,7 @@ Here's a table comparing various sorting algorithms based on their complexity in
 | BogoSort or Permutation Sort | O((n+1)!)    | O(∞)         | O((n+1)!)    | O(1)   | No     | Random Permutations      |
 | Gnome Sort                   | O(n^2)       | O(n^2)       | O(n^2)       | O(1)   | Yes    | Insertion with BackStep  |
 | Sleep Sort – The King of Laziness | O(n)     | O(n)         | O(n)         | O(n)   | No     | Sleep and WakeUp         |
-| Structure Sorting            | O(n log n)   | O(n log n)   | O(n log n)   | O(n)   | Yes    | Merging and Insertion    |
 | Stooge Sort                  | O(n^(log 3)) | O(n^(log 3)) | O(n^(log 3)) | O(1)   | No     | Recursive Trisection     |
-| Tag Sort (To get both sorted and original) | O(n log n) | O(n log n) | O(n log n) | O(n)   | No | Tagging and Sorting     |
 | Tree Sort                    | O(n log n)   | O(n^2)       | O(n log n)   | O(n)   | Yes    | Binary Search Tree       |
 | Odd-Even Sort / Brick Sort   | O(n^2)       | O(n^2)       | O(n^2)       | O(1)   | Yes    | Odd-Even Comparison      |
 | 3-way Merge Sort            | O(n log n)   | O(n log n)   | O(n log n)   | O(n)   | Yes    | Merging (3-way)         |
@@ -2039,3 +2035,187 @@ func Bucket(arr []int) []int {
 |                  |               | (assuming a simple sort is used for buckets) | (assuming a simple sort is used for buckets) |                  |
 
 Time complexity in the best case assumes that the elements are uniformly distributed across the buckets, resulting in a linear time complexity. The worst and average cases occur when all elements end up in a single bucket, leading to a quadratic time complexity. The space complexity depends on the number of buckets and the size of the data, resulting in O(n+k) where n is the number of elements and k is the number of buckets.
+
+## Bitonic Sort
+
+Bitonic sort is a comparison-based sorting algorithm that's particularly well-suited for parallel processing. It works by repeatedly dividing the input sequence into two sub-sequences, then sorting those sub-sequences, and finally merging them back together
+
+1. **Understanding Bitonic Sequences**:
+   - A bitonic sequence is one that starts off strictly increasing and then becomes strictly decreasing or vice versa.
+   - The basic idea of bitonic sort is to divide the input sequence into bitonic sequences, sort them, and then merge them into a single sorted sequence.
+
+2. **Phase 1: Creating Bitonic Sequences**:
+   - Split the input sequence into two equal halves.
+   - Recursively apply bitonic sort to each half, ensuring that they are in the proper bitonic order.
+
+3. **Phase 2: Sorting Bitonic Sequences**:
+   - During this phase, each subsequence is sorted in a specific order, which alternates for each level of recursion.
+   - In the first level of recursion, each sequence is sorted in ascending order.
+   - In the subsequent levels, you sort sequences in descending order.
+
+4. **Phase 3: Merging Bitonic Sequences**:
+   - Merge the two sorted bitonic sequences into a single larger bitonic sequence.
+   - This merging operation is performed repeatedly, with the bitonic sequences becoming larger in each iteration until the entire sequence is sorted.
+
+5. **Phase 4: Final Merge**:
+   - Merge the remaining two sequences into a single sorted sequence.
+   - The final merged sequence is now sorted in ascending order.
+
+6. **Completing the Sort**:
+   - The sequence is now fully sorted in ascending order, and the bitonic sort process is complete.
+
+bitonic sort is most efficient when used with parallel processing or on hardware designed for parallelism, as it inherently has the potential for parallel execution during the sorting and merging phases.
+
+### Normal Implementation - Bitonic Sort
+
+```go
+func BitonicSort(array []int, order bool) []int {
+	return bitonicSort(array, 0, len(array), order)
+}
+
+func bitonicSort(array []int, low, high int, dir bool) []int {
+	if high > 1 {
+		var mid int = high / 2
+		bitonicSort(array, low, mid, !dir)
+		bitonicSort(array, low+mid, high-mid, dir)
+		array = bitonicMerge(array, low, high, dir)
+	}
+	return array
+}
+
+func bitonicMerge(array []int, low, high int, dir bool) []int {
+	if high > 1 {
+		mid := greatestPowerOfTwoLessThan(high)
+		for index := low; index < low+high-mid; index++ {
+			if dir == (array[index] > array[index+mid]) {
+				array[index], array[index+mid] = array[index+mid], array[index]
+			}
+		}
+		array = bitonicMerge(array, low, mid, dir)
+		array = bitonicMerge(array, low+mid, high-mid, dir)
+	}
+	return array
+}
+
+func greatestPowerOfTwoLessThan(n int) int {
+	k := 1
+	for k > 0 && k < n {
+		k = k << 1
+	}
+	return k >> 1
+}
+```
+
+### parallel Implementation
+
+```go
+
+import (
+	"runtime"
+	"sync"
+)
+
+func BitonicSort(arr []int, order bool) []int {
+	// Set the maximum number of CPUs to utilize.
+	numCPU := runtime.NumCPU()
+	runtime.GOMAXPROCS(numCPU)
+	
+	// Start the bitonic sort process with the full array.
+	return bitonicSort(arr, 0, len(arr), order)
+}
+
+func bitonicSort(array []int, low, high int, order bool) []int {
+	// Base case: If there's only one element or none, the array is already sorted.
+	if high <= 1 {
+		return array
+	}
+	
+	// Calculate the middle point of the array.
+	mid := high / 2
+	
+	// Use a WaitGroup to synchronize go-routines.
+	var wg sync.WaitGroup
+	wg.Add(2)
+
+	// Start two go-routines to sort the left and right halves concurrently.
+	go func() {
+		bitonicSort(array, low, mid, !order) // Sort the left half.
+		wg.Done()
+	}()
+
+	go func() {
+		bitonicSort(array, low+mid, high-mid, order) // Sort the right half.
+		wg.Done()
+	}()
+
+	// Wait for the two halves to be sorted.
+	wg.Wait()
+
+	// Merge the sorted halves.
+	return bitonicMerge(array, low, high, order)
+}
+
+func bitonicMerge(array []int, low, high int, order bool) []int {
+	// Base case: If there's only one element or none, the array is already sorted.
+	if high <= 1 {
+		return array
+	}
+	
+	// Calculate the greatest power of two less than the 'high' value.
+	mid := greatestPowerOfTwoLessThan(high)
+
+	// Use a WaitGroup to synchronize go-routines for merging.
+	var wg sync.WaitGroup
+	wg.Add(2)
+
+	// Compare and swap elements within the bitonic sequence.
+	for index := low; index < low+high-mid; index++ {
+		if order == (array[index] > array[index+mid]) {
+			array[index], array[index+mid] = array[index+mid], array[index]
+		}
+	}
+
+	// Start two go-routines to merge the left and right halves concurrently.
+	go func() {
+		bitonicMerge(array, low, mid, order) // Merge the left half.
+		wg.Done()
+	}()
+
+	go func() {
+		bitonicMerge(array, low+mid, high-mid, order) // Merge the right half.
+		wg.Done()
+	}
+
+	// Wait for the two halves to be merged.
+	wg.Wait()
+
+	return array
+}
+
+func greatestPowerOfTwoLessThan(high int) int {
+	k := 1
+	// Calculate the greatest power of two less than 'high'.
+	for k > 0 && k < high {
+		k = k << 1
+	}
+	return k >> 1
+}
+```
+
+### Space and Time Complexity
+
+| Case       | Time Complexity        | Space Complexity |
+|------------|------------------------|-------------------|
+| Worst      | O(n * log^2(n))        | O(n)              |
+| Average    | O(n * log^2(n))        | O(n)              |
+| Best       | O(n * log^2(n))        | O(n)              |
+
+- **Time Complexity**:
+  - The worst, average, and best time complexities for Bitonic Sort are all O(n * log^2(n)).
+  - The reason for this is that each level of the recursive division and merging process involves O(log^2(n)) operations. The number of levels is also O(log(n)), resulting in a total time complexity of O(n * log^2(n)) for all cases.
+
+- **Space Complexity**:
+  - The space complexity for Bitonic Sort is O(n) for all cases.
+  - This is because the algorithm typically sorts the input array in-place without requiring additional memory for data structures like extra arrays. However, if additional arrays or buffers are used for parallelization, the space complexity may be higher in practice.
+
+Bitonic Sort is not typically chosen for its practical efficiency, but for its suitability for parallel processing. The O(n * log^2(n)) time complexity is less efficient compared to other sorting algorithms e.g Merge & Quick Sort

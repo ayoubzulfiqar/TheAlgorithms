@@ -60,16 +60,3 @@ func findMinMax[T Numeric](array []T) (T, T) {
 
 	return minValue, maxValue
 }
-
-func findMin[T Numeric](array []T) T {
-	if len(array) <= 1 {
-		return array[0]
-	}
-	var min T = array[0]
-	for i := 1; i < len(array); i++ {
-		if min > array[i] {
-			min = array[i]
-		}
-	}
-	return min
-}

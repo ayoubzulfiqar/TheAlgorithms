@@ -11,6 +11,15 @@ type Numeric interface {
 	~int | ~int32 | ~int64 | ~float32 | ~float64 | ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64
 }
 
+// func main() {
+// 	arr := []int{4, 3, 5, 1, 2, 8, 7, 6}
+// 	fmt.Println("Unsorted array:", arr)
+
+// 	sort.Bitonic(arr, true)
+
+// 	fmt.Println("Sorted array:", arr)
+// }
+
 func main() {
 	ms, us, s := MeasureExecutionTime()
 	fmt.Printf("Execution time in milliseconds: %d ms\n", ms)
@@ -25,13 +34,14 @@ func MeasureExecutionTime() (time.Duration, time.Duration, time.Duration) {
 
 	// Call the function you want to measure
 	// arr := util.GenerateInt(1000000)
-	arr := []int{1, 3, 5, 7, 8, 0, 2, 4, 6, 9}
-	// arr := []float64{9.0, 7.0, 5.0, 11.0, 12.0, 2.0, 14.0, 3.0, 10.0, 6.0}
+	// arr := []int{1, 3, 5, 7, 8, 2, 4, 6, 9, 0}
+	arr := []float64{9.0, 7.0, 5.0, 11.0, 12.0, 2.0, 14.0, 3.0, 10.0, 6.0}
 	// arr := []int{9, 7, 5, 11, 12, 2, 14, 3, 10, 6}
 	fmt.Printf("Unsorted %v\n", arr)
 
-	array := sort.Strand(arr)
-	fmt.Printf("Sorted %v\n", array)
+	// 	bitonicSort(arr, true, wg)
+	arr = sort.Bitonic(arr, true)
+	fmt.Printf("Sorted %v\n", arr)
 
 	endTime := time.Now()
 

@@ -2219,3 +2219,157 @@ func greatestPowerOfTwoLessThan(high int) int {
   - This is because the algorithm typically sorts the input array in-place without requiring additional memory for data structures like extra arrays. However, if additional arrays or buffers are used for parallelization, the space complexity may be higher in practice.
 
 Bitonic Sort is not typically chosen for its practical efficiency, but for its suitability for parallel processing. The O(n * log^2(n)) time complexity is less efficient compared to other sorting algorithms e.g Merge & Quick Sort
+
+## Tim Sort
+
+TimSort is a sorting algorithm that is a hybrid of merge sort and insertion sort algorithm. It is a stable algorithm and works on real-time data. In this, the list that needs to be sorted is first analyzed, and based on that the best approach is selected.
+
+1.Divide the array into blocks known as run
+2.The size of a run can either be 32 or 64
+3.Sort the elements of every run using insertion sort
+4.Merge the sorted runs using the merge sort algorithm
+5.Double the size of the merged array after every iteration
+
+Some possible optimizations:
+
+1. Use binary insertion sort for better performance on small arrays
+2. Unroll the insertion sort inner loop for performance
+3. Use galloping search for faster merging
+4. Eliminate the tmp array by merging directly back to the source
+
+**Calculation of minRun:**
+
+We know now that the first step of the TimSort algorithm is to divide the blocks into runs. minRun is the minimum length of each run. It is calculated from the number of elements of the array N.
+
+- It should not be very long as we will implement insertion sort to sort each run and we know that insertion sort works more efficiently for shorter arrays
+- However, it should also not be too short as the next step is to merge these runs, shorter runs will result in more number of runs
+- It is beneficial if N/minRun is a power of 2 as it will result in the best performance by merge sort.
+
+**Splitting and sorting of runs:**
+
+When we reach this step, we already have two values – N and minRun
+
+- A descending flag is by the comparison between the first 2 items, if there is only 1 item left, then it is set as false.
+- Then the other elements are iterated and checked whether they are still in ascending or “strict” descending order until an item that does not follow this order is found.
+- After this, we will have a run in either ascending or “strict” descending order. If it is in a “strict” descending order we need to reverse it.
+- Then we check to make sure that the length of the run satisfies minRun. If it is smaller, we compensate for the following items to make it achieve the minRun size.
+
+**Merging of runs:**
+
+- At first, we will create a temporary run having the size of the smallest of the merged runs.
+- After this, we need to copy the shortest run into the temporary one.
+- Now, we will mark the first element of the large and temporary array is as the current position.
+- In each following step, we will compare the elements in the large and temporary arrays, and the smaller ones will be moved into a new sorted array.
+- We need to repeat the above step until one of the arrays runs out.
+- Lastly, we will add All the remaining elements to the end of the new one.
+
+```go
+
+func TimSort(array []int) []int {
+	var n int = len(array)
+	var minRun int = findMinRun(n)
+
+	// Sort individual sub-arrays of size minRun
+	for start := 0; start < n; start += minRun {
+		end := start + minRun
+		if end > n {
+			end = n
+		}
+		// We have already Implemented Insertion Sort Long Time ago
+		insertion(array[start:end])
+	}
+
+	// Now merge the sorted runs
+	var size int = minRun
+	for size < n {
+		// Choose merges sized sz, sz*2, sz*4, until sz >= n
+		for start := 0; start < n; start += 2 * size {
+			mid := start + size
+			end := min(start+2*size, n)
+			merging(array[start:mid], array[mid:end])
+		}
+		size *= 2
+	}
+	return array
+}
+
+func findMinRun(n int) int {
+	const minRun int = 64
+	r := 0
+	for n >= minRun {
+		r |= n & 1
+		n >>= 1
+	}
+	return n + r
+}
+
+func min(a int, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+
+func insertion(array []int) []int {
+	var j int
+
+	for i := range array {
+		j = i
+		for j > 0 && array[j-1] > array[j] {
+			array[j-1], array[j] = array[j], array[j-1]
+			j--
+		}
+	}
+	return array
+}
+
+func merging(left []int, right []int) []int {
+	// Merge two sorted sub-arrays into one
+	var result []int = make([]int, len(left)+len(right))
+	leftIndex, rightIndex, resultIndex := 0, 0, 0
+
+	for leftIndex < len(left) && rightIndex < len(right) {
+		if left[leftIndex] <= right[rightIndex] {
+			result[resultIndex] = left[leftIndex]
+			leftIndex++
+		} else {
+			result[resultIndex] = right[rightIndex]
+			rightIndex++
+		}
+		resultIndex++
+	}
+
+	// Copy remaining elements from either a or b
+	for leftIndex < len(left) {
+		result[resultIndex] = left[leftIndex]
+		leftIndex++
+		resultIndex++
+	}
+	for rightIndex < len(right) {
+		result[resultIndex] = right[rightIndex]
+		rightIndex++
+		resultIndex++
+	}
+
+	// Copy tmp back to a and b
+	copy(left, result)
+	copy(right, result[len(left):])
+	return result
+}
+```
+
+### Space and Time Complexity
+
+| Complexity       | Time Complexity                  | Space Complexity |
+|------------------|----------------------------------|------------------|
+| **Worst Case**   | O(n * log(n))                    | O(n)             |
+| **Best Case**    | O(n)                             | O(n)             |
+| **Average Case** | O(n * log(n))                    | O(n)             |
+
+- **Time Complexity**:
+  - In the worst and average cases, Tim Sort has a time complexity of O(n * log(n)), which makes it efficient for sorting large datasets.
+  - In the best case, when the data is already partially ordered, the time complexity can reduce to O(n), which is highly efficient.
+  
+- **Space Complexity**:
+  - Tim Sort has a space complexity of O(n) as it requires additional memory for storing temporary data structures during the sorting and merging processes.

@@ -23,6 +23,7 @@ Note: The performance of the shell sort depends on the type of sequence used for
 
 
 
+
 */
 
 // With Original Shell Sort Sequence
@@ -98,8 +99,8 @@ func ShellKnuth[T Numeric](array []T) []T {
 	return array
 }
 
-// Sedgewick's Sequence
 
+// Sedgewick's Sequence
 func ShellSedgewick[T Numeric](array []T) []T {
 	var n int = len(array)
 

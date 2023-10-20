@@ -4,6 +4,10 @@ import (
 	"math/rand"
 )
 
+type Numeric interface {
+	~int | ~int32 | ~int64 | ~float32 | ~float64 | ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64
+}
+
 // Helper function to generate a random array of a given size
 func generateIntArray(size int) []int {
 	arr := make([]int, size)
@@ -33,8 +37,4 @@ func generateNegativeArray(size int) []int {
 	}
 
 	return data
-}
-
-type Numeric interface {
-	~int | ~int32 | ~int64 | ~float32 | ~float64 | ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64
 }

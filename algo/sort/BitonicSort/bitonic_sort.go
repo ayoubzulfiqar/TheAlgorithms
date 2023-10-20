@@ -1,9 +1,10 @@
 package sort
 
-import (
-	"runtime"
-	"sync"
-)
+import "sync"
+
+type Numeric interface {
+	~int | ~int32 | ~int64 | ~float32 | ~float64 | ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64
+}
 
 /*
 // Bitonic Sort - Sort Any Type (No power of two require)
@@ -51,10 +52,7 @@ func greatestPowerOfTwoLessThan(n int) int {
 // ========= Co-Current version
 
 func Bitonic[T Numeric](arr []T, order bool) []T {
-	numCPU := runtime.NumCPU()
-	runtime.GOMAXPROCS(numCPU)
 	return bitonicSort(arr, 0, len(arr), order)
-
 }
 
 func bitonicSort[T Numeric](array []T, low, high int, order bool) []T {
@@ -120,5 +118,3 @@ func greatestPowerOfTwoLessThan(high int) int {
 	}
 	return k >> 1
 }
-
-// Reading: https://hwlang.de/algorithmen/sortieren/bitonic/oddn.htm

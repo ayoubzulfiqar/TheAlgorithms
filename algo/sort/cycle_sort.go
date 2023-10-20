@@ -56,8 +56,6 @@ package sort
 
 
 
-
-
 */
 
 func Cycle[T Numeric](array []T) []T {

@@ -57,4 +57,5 @@ func partition[T Numeric](array []T, low, high int) (int, int) {
 
 	// Return the boundaries of elements equal to the pivot.
 	return lessThan, greaterThan
+
 }

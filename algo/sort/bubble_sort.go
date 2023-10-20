@@ -19,12 +19,14 @@ package sort
 4. The function enters a loop that continues until the `swapped` flag remains `true`.
    This loop represents the main Bubble Sort algorithm.
 
-5. Inside the loop, it assumes that the array is not sorted at the beginning of each pass, so it sets `swapped` to `false`.
+5. Inside the loop, it assumes that the array is not sorted at the beginning of each pass, so it
+   sets `swapped` to `false`.
 
-6. It then enters another loop, starting from the second element (index 1) of the array and comparing adjacent elements.
+6. It then enters another loop, starting from the second element (index 1) of the
+   array and comparing adjacent elements.
 
-7. If it finds that the previous element (at index `i-1`) is greater than the current element (at index `i`),
-   it swaps the elements to put them in the correct order.
+7. If it finds that the previous element (at index `i-1`) is greater than the current
+   element (at index `i`), it swaps the elements to put them in the correct order.
 
 8. After each pass through the array, it checks if any swaps were made (`swapped` is `true`).
    If no swaps were made, it means the array is sorted, and the loop exits.
@@ -72,25 +74,30 @@ func Bubble[T Numeric](array []T) []T {
 
 
 
-1. The function `RecursiveBubble` is a recursive sorting function that takes a generic slice `array` as
-   its input, and it's designed to work with various numeric types, indicated by the `T Numeric` constraint.
+1. The function `RecursiveBubble` is a recursive sorting function that takes a
+   generic slice `array` as its input, and it's designed to work with various
+   numeric types, indicated by the `T Numeric` constraint.
 
 2. It calculates the initial length of the input array `n` using the `len` function.
 
-3. It checks for the base case of the recursion: if the length of the array `n` is less than or equal to 1,
-   it means the array is already sorted (or empty), so it returns the array as is. This is the stopping condition for the recursion.
+3. It checks for the base case of the recursion: if the length of the array `n`
+   is less than or equal to 1, it means the array is already sorted (or empty),
+   so it returns the array as is. This is the stopping condition for the recursion.
 
 4. Inside the recursive function, it enters a loop that starts from the second element (index 1) of
    the array and compares adjacent elements.
 
-5. If it finds that the previous element (at index `i-1`) is greater than the current element (at index `i`),
-   it swaps the elements to put them in the correct order, just like in the standard Bubble Sort.
+5. If it finds that the previous element (at index `i-1`) is greater than the current
+   element (at index `i`), it swaps the elements to put them in the correct order,
+   just like in the standard Bubble Sort.
 
-6. After the loop, it makes a recursive call to `RecursiveBubble` with a slice of the array from the beginning
-   to the second-to-last element (effectively reducing the array size by one element). This recursive call continues the sorting process on the remaining unsorted portion of the array.
+6. After the loop, it makes a recursive call to `RecursiveBubble` with a slice of the
+   array from the beginning to the second-to-last element (effectively reducing the
+   array size by one element). This recursive call continues the sorting process on the
+   remaining unsorted portion of the array.
 
-7. The recursion continues until the base case is met (when `n` is less than or equal to 1), and each
-   recursive call helps sort a smaller portion of the array.
+7. The recursion continues until the base case is met (when `n` is less than or equal to 1),
+   and each recursive call helps sort a smaller portion of the array.
 
 8. Finally, the function returns the sorted array.
 
@@ -99,6 +106,8 @@ func Bubble[T Numeric](array []T) []T {
 
 
 */
+
+
 func RecursiveBubble[T Numeric](array []T) []T {
 	var n int = len(array)
 	if n <= 1 {

@@ -4,69 +4,90 @@ import (
 	"reflect"
 	"testing"
 
-	sorts "github.com/ayoubzulfiqar/TheAlgorithms/algo/sort"
+	sorts "github.com/ayoubzulfiqar/TheAlgorithms/algo/sort/BitonicSort"
 )
 
-func TestBitonicIntSort(t *testing.T) {
-	// Test case: Unsorted array
-	unsortedArray := []int{9, 7, 5, 11, 12, 2, 14, 3, 10, 6}
-	expectedSortedArray := []int{2, 3, 5, 6, 7, 9, 10, 11, 12, 14}
-	// true - for Ascending
-	sortedArray := sorts.Bitonic(unsortedArray, true)
+func TestBitonicSort(t *testing.T) {
+	t.Run("Bitonic Uint:", func(t *testing.T) {
+		data := []uint{3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5}
+		expected := []uint{1, 1, 2, 3, 3, 4, 5, 5, 5, 6, 9}
+		testBitonicAssert(t, data, expected)
+	})
 
-	// Check if the sorted array matches the expected result
-	if !reflect.DeepEqual(sortedArray, expectedSortedArray) {
-		t.Errorf("PigeonSort(%v) = %v; want %v", unsortedArray, sortedArray, expectedSortedArray)
+	t.Run("Bitonic Int:", func(t *testing.T) {
+		data := []int{3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5}
+		expected := []int{1, 1, 2, 3, 3, 4, 5, 5, 5, 6, 9}
+		testBitonicAssert(t, data, expected)
+	})
+	t.Run("Bitonic Negative Int:", func(t *testing.T) {
+		data := []int{3, 1, 4, -2, -5, 9, -1, 6, 5, 3, 5}
+		expected := []int{-5, -2, -1, 1, 3, 3, 4, 5, 5, 6, 9}
+		testBitonicAssert(t, data, expected)
+	})
+	t.Run("Bitonic Float:", func(t *testing.T) {
+		// Test sorting for float64 slices
+		data := []float64{3.14, 1.0, 2.71, 0.0}
+		expected := []float64{0.0, 1.0, 2.71, 3.14}
+		testBitonicAssert(t, data, expected)
+	})
+
+	t.Run("Bitonic Negative Float:", func(t *testing.T) {
+		data := []float64{3.14, 1.0, -2.71, 0.0, -1.5}
+		expected := []float64{-2.71, -1.5, 0.0, 1.0, 3.14}
+		testBitonicAssert(t, data, expected)
+	})
+
+	t.Run("Bitonic Edge Case:", func(t *testing.T) {
+		// Negative Ints
+		testBitonicAssert(t, []int{}, []int{})
+		testBitonicAssert(t, []int{-42}, []int{-42})
+		testBitonicAssert(t, []int{-1, -2, -3, -4, -5}, []int{-5, -4, -3, -2, -1})
+
+		// UInts
+		testBitonicAssert(t, []uint{}, []uint{})
+		testBitonicAssert(t, []uint{42}, []uint{42})
+		testBitonicAssert(t, []uint{1, 2, 3, 4, 5}, []uint{1, 2, 3, 4, 5})
+
+		// Float Edge cases
+		testBitonicAssert(t, []float64{}, []float64{})
+		testBitonicAssert(t, []float64{42.0}, []float64{42.0})
+		testBitonicAssert(t, []float64{1.1, 1.1, 1.1, 1.1}, []float64{1.1, 1.1, 1.1, 1.1})
+		testBitonicAssert(t, []float64{3.0, 2.0, 1.0}, []float64{1.0, 2.0, 3.0})
+
+	})
+}
+
+func testBitonicAssert[N Numeric](t *testing.T, data, expected []N) {
+	t.Helper()
+	// true for ascending
+	data = sorts.Bitonic(data, true)
+	if !reflect.DeepEqual(data, expected) {
+		t.Errorf("\nSorting failed. Got %v, expected %v", data, expected)
 	}
 }
 
-func TestBitonicFloatSort(t *testing.T) {
-	// Test case: Unsorted array
-	unsortedArray := []float64{9.0, 7.0, 5.0, 11.0, 12.0, 2.0, 14.0, 3.0, 10.0, 6.0}
-	expectedSortedArray := []float64{2.0, 3.0, 5.0, 6.0, 7.0, 9.0, 10.0, 11.0, 12.0, 14.0}
-	// true - for Ascending
-	sortedArray := sorts.Bitonic(unsortedArray, true)
-
-	// Check if the sorted array matches the expected result
-	if !reflect.DeepEqual(sortedArray, expectedSortedArray) {
-		t.Errorf("BingoSort(%v) = %v; want %v", unsortedArray, sortedArray, expectedSortedArray)
-	}
+func BenchmarkBitonic(b *testing.B) {
+	b.Run("Bitonic Int", func(b *testing.B) {
+		array := generateIntArray(10000)
+		benchBitonicAssert(b, array)
+	})
+	b.Run("Bitonic Float", func(b *testing.B) {
+		array := generateFloatArray(10000)
+		benchBitonicAssert(b, array)
+	})
+	b.Run("Bitonic Negative", func(b *testing.B) {
+		array := generateNegativeArray(10000)
+		benchBitonicAssert(b, array)
+	})
 }
 
-// BenchMark
-
-func BenchmarkINTBitonicSort(b *testing.B) {
-	// Generate a random unsorted array for each benchmark iteration
-	unsortedArray := generateRandomArray(100) // Change the array size as needed
-
+func benchBitonicAssert[N Numeric](b *testing.B, array []N) {
+	b.Helper()
+	b.ResetTimer()
+	b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		// Make a copy of the unsorted array for each iteration to ensure fairness
-		arrayCopy := make([]int, len(unsortedArray))
-		copy(arrayCopy, unsortedArray)
-
-		// Run the sorting algorithm and measure the time it takes
-		b.StartTimer()
-		// true - for Ascending
-		sorts.Bitonic(arrayCopy, true)
-
-		b.StopTimer()
+		// true for ascending
+		array = sorts.Bitonic(array, true)
 	}
-}
-
-func BenchmarkFLOATBitonicSort(b *testing.B) {
-	// Generate a random unsorted array for each benchmark iteration
-	unsortedArray := generateRandomFloatArray(100) // Change the array size as needed
-
-	for i := 0; i < b.N; i++ {
-		// Make a copy of the unsorted array for each iteration to ensure fairness
-		arrayCopy := make([]float64, len(unsortedArray))
-		copy(arrayCopy, unsortedArray)
-
-		// Run the sorting algorithm and measure the time it takes
-		b.StartTimer()
-		// true - for Ascending
-		sorts.Bitonic(arrayCopy, true)
-
-		b.StopTimer()
-	}
+	b.StopTimer()
 }

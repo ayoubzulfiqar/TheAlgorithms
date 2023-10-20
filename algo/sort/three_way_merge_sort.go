@@ -56,16 +56,16 @@ func merge[T Numeric](array []T, left []T, middle []T, right []T) []T {
 
 func ThreeWayMerge[T Numeric](array []T) []T {
 	if len(array) > 1 {
-		mid1 := len(array) / 3
-		mid2 := 2 * len(array) / 3
+		var mid1 int = len(array) / 3
+		var mid2 int = 2 * len(array) / 3
 		// Split the input array into three parts: left, middle, and right
-		left := make([]T, mid1)
+		var left []T = make([]T, mid1)
 		copy(left, array[:mid1])
 
-		middle := make([]T, mid2-mid1)
+		var middle []T = make([]T, mid2-mid1)
 		copy(middle, array[mid1:mid2])
 
-		right := make([]T, len(array)-mid2)
+		var right []T = make([]T, len(array)-mid2)
 		copy(right, array[mid2:])
 		// Recursively sort the left, middle, and right sub-arrays
 		ThreeWayMerge(left)

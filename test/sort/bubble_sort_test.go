@@ -1,5 +1,7 @@
 package sort
 
+// TODO: Write test For Recursive
+
 import (
 	"reflect"
 	"testing"
@@ -7,128 +9,85 @@ import (
 	sorts "github.com/ayoubzulfiqar/TheAlgorithms/algo/sort"
 )
 
-func TestBubbleIntSort(t *testing.T) {
-	// Test case: Unsorted array
-	unsortedArray := []int{9, 7, 5, 11, 12, 2, 14, 3, 10, 6}
-	expectedSortedArray := []int{2, 3, 5, 6, 7, 9, 10, 11, 12, 14}
+func TestBubbleSort(t *testing.T) {
+	t.Run("Bubble Uint:", func(t *testing.T) {
+		data := []uint{3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5}
+		expected := []uint{1, 1, 2, 3, 3, 4, 5, 5, 5, 6, 9}
+		testBubbleAssert(t, data, expected)
+	})
 
-	sortedArray := sorts.Bubble(unsortedArray)
+	t.Run("Bubble Int:", func(t *testing.T) {
+		data := []int{3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5}
+		expected := []int{1, 1, 2, 3, 3, 4, 5, 5, 5, 6, 9}
+		testBubbleAssert(t, data, expected)
+	})
+	t.Run("Bubble Negative Int:", func(t *testing.T) {
+		data := []int{3, 1, 4, -2, -5, 9, -1, 6, 5, 3, 5}
+		expected := []int{-5, -2, -1, 1, 3, 3, 4, 5, 5, 6, 9}
+		testBubbleAssert(t, data, expected)
+	})
+	t.Run("Bubble Float:", func(t *testing.T) {
+		// Test sorting for float64 slices
+		data := []float64{3.14, 1.0, 2.71, 0.0}
+		expected := []float64{0.0, 1.0, 2.71, 3.14}
+		testBubbleAssert(t, data, expected)
+	})
 
-	// Check if the sorted array matches the expected result
-	if !reflect.DeepEqual(sortedArray, expectedSortedArray) {
-		t.Errorf("PigeonSort(%v) = %v; want %v", unsortedArray, sortedArray, expectedSortedArray)
+	t.Run("Bubble Negative Float:", func(t *testing.T) {
+		data := []float64{3.14, 1.0, -2.71, 0.0, -1.5}
+		expected := []float64{-2.71, -1.5, 0.0, 1.0, 3.14}
+		testBubbleAssert(t, data, expected)
+	})
+
+	t.Run("Bubble Edge Case:", func(t *testing.T) {
+		// Negative Ints
+		testBubbleAssert(t, []int{}, []int{})
+		testBubbleAssert(t, []int{-42}, []int{-42})
+		testBubbleAssert(t, []int{-1, -2, -3, -4, -5}, []int{-5, -4, -3, -2, -1})
+
+		// UInts
+		testBubbleAssert(t, []uint{}, []uint{})
+		testBubbleAssert(t, []uint{42}, []uint{42})
+		testBubbleAssert(t, []uint{1, 2, 3, 4, 5}, []uint{1, 2, 3, 4, 5})
+
+		// Float Edge cases
+		testBubbleAssert(t, []float64{}, []float64{})
+		testBubbleAssert(t, []float64{42.0}, []float64{42.0})
+		testBubbleAssert(t, []float64{1.1, 1.1, 1.1, 1.1}, []float64{1.1, 1.1, 1.1, 1.1})
+		testBubbleAssert(t, []float64{3.0, 2.0, 1.0}, []float64{1.0, 2.0, 3.0})
+
+	})
+}
+
+func testBubbleAssert[N Numeric](t *testing.T, data, expected []N) {
+	t.Helper()
+	data = sorts.Bubble(data)
+	if !reflect.DeepEqual(data, expected) {
+		t.Errorf("\nSorting failed. Got %v, expected %v", data, expected)
 	}
 }
 
-func TestBubbleFloatSort(t *testing.T) {
-	// Test case: Unsorted array
-	unsortedArray := []float64{9.0, 7.0, 5.0, 11.0, 12.0, 2.0, 14.0, 3.0, 10.0, 6.0}
-	expectedSortedArray := []float64{2.0, 3.0, 5.0, 6.0, 7.0, 9.0, 10.0, 11.0, 12.0, 14.0}
-
-	sortedArray := sorts.Bubble(unsortedArray)
-
-	// Check if the sorted array matches the expected result
-	if !reflect.DeepEqual(sortedArray, expectedSortedArray) {
-		t.Errorf("BingoSort(%v) = %v; want %v", unsortedArray, sortedArray, expectedSortedArray)
-	}
+func BenchmarkBubble(b *testing.B) {
+	b.Run("Bubble Int", func(b *testing.B) {
+		array := generateIntArray(10000)
+		benchBubbleAssert(b, array)
+	})
+	b.Run("Bubble Float", func(b *testing.B) {
+		array := generateFloatArray(10000)
+		benchBubbleAssert(b, array)
+	})
+	b.Run("Bubble Negative", func(b *testing.B) {
+		array := generateNegativeArray(10000)
+		benchBubbleAssert(b, array)
+	})
 }
 
-// BenchMark
-
-func BenchmarkINTBubbleSort(b *testing.B) {
-	// Generate a random unsorted array for each benchmark iteration
-	unsortedArray := generateRandomArray(100) // Change the array size as needed
-
+func benchBubbleAssert[N Numeric](b *testing.B, array []N) {
+	b.Helper()
+	b.ResetTimer()
+	b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		// Make a copy of the unsorted array for each iteration to ensure fairness
-		arrayCopy := make([]int, len(unsortedArray))
-		copy(arrayCopy, unsortedArray)
-
-		// Run the sorting algorithm and measure the time it takes
-		b.StartTimer()
-		sorts.Bubble(arrayCopy)
-
-		b.StopTimer()
+		array = sorts.Bubble(array)
 	}
-}
-
-func BenchmarkFLOATBubbleSort(b *testing.B) {
-	// Generate a random unsorted array for each benchmark iteration
-	unsortedArray := generateRandomFloatArray(100) // Change the array size as needed
-
-	for i := 0; i < b.N; i++ {
-		// Make a copy of the unsorted array for each iteration to ensure fairness
-		arrayCopy := make([]float64, len(unsortedArray))
-		copy(arrayCopy, unsortedArray)
-
-		// Run the sorting algorithm and measure the time it takes
-		b.StartTimer()
-		sorts.Bubble(arrayCopy)
-
-		b.StopTimer()
-	}
-}
-
-// Recursive
-
-func TestBubbleRecursiveIntSort(t *testing.T) {
-	// Test case: Unsorted array
-	unsortedArray := []int{9, 7, 5, 11, 12, 2, 14, 3, 10, 6}
-	expectedSortedArray := []int{2, 3, 5, 6, 7, 9, 10, 11, 12, 14}
-
-	sortedArray := sorts.RecursiveBubble(unsortedArray)
-
-	// Check if the sorted array matches the expected result
-	if !reflect.DeepEqual(sortedArray, expectedSortedArray) {
-		t.Errorf("PigeonSort(%v) = %v; want %v", unsortedArray, sortedArray, expectedSortedArray)
-	}
-}
-
-func TestRecursiveBubbleFloatSort(t *testing.T) {
-	// Test case: Unsorted array
-	unsortedArray := []float64{9.0, 7.0, 5.0, 11.0, 12.0, 2.0, 14.0, 3.0, 10.0, 6.0}
-	expectedSortedArray := []float64{2.0, 3.0, 5.0, 6.0, 7.0, 9.0, 10.0, 11.0, 12.0, 14.0}
-
-	sortedArray := sorts.RecursiveBubble(unsortedArray)
-
-	// Check if the sorted array matches the expected result
-	if !reflect.DeepEqual(sortedArray, expectedSortedArray) {
-		t.Errorf("BingoSort(%v) = %v; want %v", unsortedArray, sortedArray, expectedSortedArray)
-	}
-}
-
-// BenchMark
-
-func BenchmarkINTRecursiveBubbleSort(b *testing.B) {
-	// Generate a random unsorted array for each benchmark iteration
-	unsortedArray := generateRandomArray(100) // Change the array size as needed
-
-	for i := 0; i < b.N; i++ {
-		// Make a copy of the unsorted array for each iteration to ensure fairness
-		arrayCopy := make([]int, len(unsortedArray))
-		copy(arrayCopy, unsortedArray)
-
-		// Run the sorting algorithm and measure the time it takes
-		b.StartTimer()
-		sorts.RecursiveBubble(arrayCopy)
-
-		b.StopTimer()
-	}
-}
-
-func BenchmarkFLOATRecursiveBubbleSort(b *testing.B) {
-	// Generate a random unsorted array for each benchmark iteration
-	unsortedArray := generateRandomFloatArray(100) // Change the array size as needed
-
-	for i := 0; i < b.N; i++ {
-		// Make a copy of the unsorted array for each iteration to ensure fairness
-		arrayCopy := make([]float64, len(unsortedArray))
-		copy(arrayCopy, unsortedArray)
-
-		// Run the sorting algorithm and measure the time it takes
-		b.StartTimer()
-		sorts.RecursiveBubble(arrayCopy)
-
-		b.StopTimer()
-	}
+	b.StopTimer()
 }

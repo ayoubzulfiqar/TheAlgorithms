@@ -1,7 +1,5 @@
 package sort
 
-import "errors"
-
 /*
 
 
@@ -86,12 +84,11 @@ import "errors"
 
 
 
-
 */
 
-func Pigeon[T Numeric](array []T) ([]T, error) {
+func Pigeon[T Numeric](array []T) []T {
 	if len(array) == 0 {
-		return nil, errors.New("The Provided Array is Empty")
+		return array
 	}
 	// Finding min and max with the help of helper function
 	minValue, maxValue := findMinMax(array)
@@ -131,5 +128,5 @@ func Pigeon[T Numeric](array []T) ([]T, error) {
 		}
 	}
 
-	return array, nil
+	return array
 }

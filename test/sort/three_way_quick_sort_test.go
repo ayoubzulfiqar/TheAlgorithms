@@ -7,64 +7,85 @@ import (
 	sorts "github.com/ayoubzulfiqar/TheAlgorithms/algo/sort"
 )
 
-func TestThreeWayQuickIntSort(t *testing.T) {
-	// Test case: Unsorted array
-	unsortedArray := []int{9, 7, 5, 11, 12, 2, 14, 3, 10, 6}
-	expectedSortedArray := []int{2, 3, 5, 6, 7, 9, 10, 11, 12, 14}
+func TestThreeWayQuickSort(t *testing.T) {
+	t.Run("ThreeWayQuick Uint:", func(t *testing.T) {
+		data := []uint{3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5}
+		expected := []uint{1, 1, 2, 3, 3, 4, 5, 5, 5, 6, 9}
+		testThreeWayQuickAssert(t, data, expected)
+	})
 
-	sortedArray := sorts.ThreeWayQuick(unsortedArray)
+	t.Run("ThreeWayQuick Int:", func(t *testing.T) {
+		data := []int{3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5}
+		expected := []int{1, 1, 2, 3, 3, 4, 5, 5, 5, 6, 9}
+		testThreeWayQuickAssert(t, data, expected)
+	})
+	t.Run("ThreeWayQuick Negative Int:", func(t *testing.T) {
+		data := []int{3, 1, 4, -2, -5, 9, -1, 6, 5, 3, 5}
+		expected := []int{-5, -2, -1, 1, 3, 3, 4, 5, 5, 6, 9}
+		testThreeWayQuickAssert(t, data, expected)
+	})
+	t.Run("ThreeWayQuick Float:", func(t *testing.T) {
+		// Test sorting for float64 slices
+		data := []float64{3.14, 1.0, 2.71, 0.0}
+		expected := []float64{0.0, 1.0, 2.71, 3.14}
+		testThreeWayQuickAssert(t, data, expected)
+	})
 
-	// Check if the sorted array matches the expected result
-	if !reflect.DeepEqual(sortedArray, expectedSortedArray) {
-		t.Errorf("Three Way Quick(%v) = %v; want %v", unsortedArray, sortedArray, expectedSortedArray)
+	t.Run("ThreeWayQuick Negative Float:", func(t *testing.T) {
+		data := []float64{3.14, 1.0, -2.71, 0.0, -1.5}
+		expected := []float64{-2.71, -1.5, 0.0, 1.0, 3.14}
+		testThreeWayQuickAssert(t, data, expected)
+	})
+
+	t.Run("ThreeWayQuick Edge Case:", func(t *testing.T) {
+		// Negative Ints
+		testThreeWayQuickAssert(t, []int{}, []int{})
+		testThreeWayQuickAssert(t, []int{-42}, []int{-42})
+		testThreeWayQuickAssert(t, []int{-1, -2, -3, -4, -5}, []int{-5, -4, -3, -2, -1})
+
+		// UInts
+		testThreeWayQuickAssert(t, []uint{}, []uint{})
+		testThreeWayQuickAssert(t, []uint{42}, []uint{42})
+		testThreeWayQuickAssert(t, []uint{1, 2, 3, 4, 5}, []uint{1, 2, 3, 4, 5})
+
+		// Float Edge cases
+		testThreeWayQuickAssert(t, []float64{}, []float64{})
+		testThreeWayQuickAssert(t, []float64{42.0}, []float64{42.0})
+		testThreeWayQuickAssert(t, []float64{1.1, 1.1, 1.1, 1.1}, []float64{1.1, 1.1, 1.1, 1.1})
+		testThreeWayQuickAssert(t, []float64{3.0, 2.0, 1.0}, []float64{1.0, 2.0, 3.0})
+
+	})
+}
+
+func testThreeWayQuickAssert[N Numeric](t *testing.T, data, expected []N) {
+	t.Helper()
+	data = sorts.ThreeWayQuick(data)
+	if !reflect.DeepEqual(data, expected) {
+		t.Errorf("\nSorting failed. Got %v, expected %v", data, expected)
 	}
 }
 
-func TestThreeWayQuickFloatSort(t *testing.T) {
-	// Test case: Unsorted array
-	unsortedArray := []float64{9.0, 7.0, 5.0, 11.0, 12.0, 2.0, 14.0, 3.0, 10.0, 6.0}
-	expectedSortedArray := []float64{2.0, 3.0, 5.0, 6.0, 7.0, 9.0, 10.0, 11.0, 12.0, 14.0}
-
-	sortedArray := sorts.ThreeWayQuick(unsortedArray)
-
-	// Check if the sorted array matches the expected result
-	if !reflect.DeepEqual(sortedArray, expectedSortedArray) {
-		t.Errorf("Three Way Quick(%v) = %v; want %v", unsortedArray, sortedArray, expectedSortedArray)
-	}
+func BenchmarkThreeWayQuick(b *testing.B) {
+	b.Run("ThreeWayQuick Int", func(b *testing.B) {
+		array := generateIntArray(10000)
+		benchThreeWayQuickAssert(b, array)
+	})
+	b.Run("ThreeWayQuick Float", func(b *testing.B) {
+		array := generateFloatArray(10000)
+		benchThreeWayQuickAssert(b, array)
+	})
+	b.Run("ThreeWayQuick Negative", func(b *testing.B) {
+		array := generateNegativeArray(10000)
+		benchThreeWayQuickAssert(b, array)
+	})
 }
 
-// BenchMark
-
-func BenchmarkINTThreeWayQuickSort(b *testing.B) {
-	// Generate a random unsorted array for each benchmark iteration
-	unsortedArray := generateRandomArray(100) // Change the array size as needed
-
+func benchThreeWayQuickAssert[N Numeric](b *testing.B, array []N) {
+	b.Helper()
+	b.ResetTimer()
+	b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		// Make a copy of the unsorted array for each iteration to ensure fairness
-		arrayCopy := make([]int, len(unsortedArray))
-		copy(arrayCopy, unsortedArray)
-
-		// Run the sorting algorithm and measure the time it takes
-		b.StartTimer()
-		sorts.ThreeWayQuick(arrayCopy)
-
-		b.StopTimer()
+		array = sorts.ThreeWayQuick(array)
 	}
-}
-
-func BenchmarkFLOATThreeWayQuickSort(b *testing.B) {
-	// Generate a random unsorted array for each benchmark iteration
-	unsortedArray := generateRandomFloatArray(100) // Change the array size as needed
-
-	for i := 0; i < b.N; i++ {
-		// Make a copy of the unsorted array for each iteration to ensure fairness
-		arrayCopy := make([]float64, len(unsortedArray))
-		copy(arrayCopy, unsortedArray)
-
-		// Run the sorting algorithm and measure the time it takes
-		b.StartTimer()
-		sorts.ThreeWayQuick(arrayCopy)
-
-		b.StopTimer()
-	}
+	b.StopTimer()
 }

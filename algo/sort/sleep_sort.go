@@ -1,6 +1,7 @@
 package sort
 
 import "sync"
+
 // safeAppend safely appends an element of type T to a slice, protected by a mutex.
 func safeAppend[T Numeric](arr *[]T, wg *sync.WaitGroup, mutex *sync.Mutex, num T) {
 	// Mark the wait group as done when this goroutine exits.
@@ -42,4 +43,3 @@ func Sleep[T Numeric](array []T) []T {
 	// Return the sorted slice with initially allocated space removed.
 	return sorted
 }
-

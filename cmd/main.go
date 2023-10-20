@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"time"
-
-	"github.com/ayoubzulfiqar/TheAlgorithms/algo/sort"
 )
 
 type Numeric interface {
@@ -30,7 +28,6 @@ func MeasureExecutionTime() (time.Duration, time.Duration, time.Duration) {
 	// arr := []int{9, 7, 5, 11, 12, 2, 14, 3, 10, 6}
 	fmt.Printf("Unsorted %v\n", arr)
 
-	sort.Tim(arr)
 	fmt.Printf("Sorted %v\n", arr)
 
 	endTime := time.Now()

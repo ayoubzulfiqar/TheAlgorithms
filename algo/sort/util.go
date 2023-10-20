@@ -5,7 +5,7 @@ import (
 )
 
 // shuffle function shuffles the array to mitigate worst-case scenarios.
-func shuffle[T Numeric](arr []T) {
+func shuffle[T Numeric](arr []T) []T {
 	// Initialize the random number generator with a seed for consistency.
 	rand.New(rand.NewSource(99))
 
@@ -15,19 +15,20 @@ func shuffle[T Numeric](arr []T) {
 		j := rand.Intn(i + 1)
 		arr[i], arr[j] = arr[j], arr[i]
 	}
+	return arr
 }
 
 //
 
 // Finding the Max Element inside the Array
-func findMax[T Numeric](array []T) int {
-	var maxIndex int = 0
+func findMax[T Numeric](array []T) T {
+	var maxIndex T = 0
 	// loop through the element of the array
 	for i := 1; i < len(array); i++ {
 		// if the element is inside the array is larger than the our max Value
-		if array[i] > array[maxIndex] {
+		if array[i] > array[int(maxIndex)] {
 			// we found new larger element
-			maxIndex = i
+			maxIndex = T(i)
 		}
 	}
 	return maxIndex

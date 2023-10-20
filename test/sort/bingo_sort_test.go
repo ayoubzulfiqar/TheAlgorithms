@@ -7,44 +7,85 @@ import (
 	sorts "github.com/ayoubzulfiqar/TheAlgorithms/algo/sort"
 )
 
-func TestBingoIntSort(t *testing.T) {
-	// Test case: Unsorted array
-	unsortedArray := []int{9, 7, 5, 11, 12, 2, 14, 3, 10, 6}
-	expectedSortedArray := []int{2, 3, 5, 6, 7, 9, 10, 11, 12, 14}
+func TestBingoSort(t *testing.T) {
+	t.Run("BingoUint:", func(t *testing.T) {
+		data := []uint{3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5}
+		expected := []uint{1, 1, 2, 3, 3, 4, 5, 5, 5, 6, 9}
+		testBingoAssert(t, data, expected)
+	})
 
-	sortedArray := sorts.Bingo(unsortedArray)
+	t.Run("Bingo Int:", func(t *testing.T) {
+		data := []int{3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5}
+		expected := []int{1, 1, 2, 3, 3, 4, 5, 5, 5, 6, 9}
+		testBingoAssert(t, data, expected)
+	})
+	t.Run("Bingo Negative Int:", func(t *testing.T) {
+		data := []int{3, 1, 4, -2, -5, 9, -1, 6, 5, 3, 5}
+		expected := []int{-5, -2, -1, 1, 3, 3, 4, 5, 5, 6, 9}
+		testBingoAssert(t, data, expected)
+	})
+	t.Run("Bingo Float:", func(t *testing.T) {
+		// Test sorting for float64 slices
+		data := []float64{3.14, 1.0, 2.71, 0.0}
+		expected := []float64{0.0, 1.0, 2.71, 3.14}
+		testBingoAssert(t, data, expected)
+	})
 
-	// Check if the sorted array matches the expected result
-	if !reflect.DeepEqual(sortedArray, expectedSortedArray) {
-		t.Errorf("BingoSort(%v) = %v; want %v", unsortedArray, sortedArray, expectedSortedArray)
+	t.Run("Bingo Negative Float:", func(t *testing.T) {
+		data := []float64{3.14, 1.0, -2.71, 0.0, -1.5}
+		expected := []float64{-2.71, -1.5, 0.0, 1.0, 3.14}
+		testBingoAssert(t, data, expected)
+	})
+
+	t.Run("Bingo Edge Case:", func(t *testing.T) {
+		// Negative Ints
+		testBingoAssert(t, []int{}, []int{})
+		testBingoAssert(t, []int{-42}, []int{-42})
+		testBingoAssert(t, []int{-1, -2, -3, -4, -5}, []int{-5, -4, -3, -2, -1})
+
+		// UInts
+		testBingoAssert(t, []uint{}, []uint{})
+		testBingoAssert(t, []uint{42}, []uint{42})
+		testBingoAssert(t, []uint{1, 2, 3, 4, 5}, []uint{1, 2, 3, 4, 5})
+
+		// Float Edge cases
+		testBingoAssert(t, []float64{}, []float64{})
+		testBingoAssert(t, []float64{42.0}, []float64{42.0})
+		testBingoAssert(t, []float64{1.1, 1.1, 1.1, 1.1}, []float64{1.1, 1.1, 1.1, 1.1})
+		testBingoAssert(t, []float64{3.0, 2.0, 1.0}, []float64{1.0, 2.0, 3.0})
+
+	})
+}
+
+func testBingoAssert[N Numeric](t *testing.T, data, expected []N) {
+	t.Helper()
+	data = sorts.Bingo(data)
+	if !reflect.DeepEqual(data, expected) {
+		t.Errorf("\nSorting failed. Got %v, expected %v", data, expected)
 	}
 }
-func TestBingoFloatSort(t *testing.T) {
-	// Test case: Unsorted array
-	unsortedArray := []float64{9.0, 7.0, 5.0, 11.0, 12.0, 2.0, 14.0, 3.0, 10.0, 6.0}
-	expectedSortedArray := []float64{2.0, 3.0, 5.0, 6.0, 7.0, 9.0, 10.0, 11.0, 12.0, 14.0}
 
-	sortedArray := sorts.Bingo(unsortedArray)
-
-	// Check if the sorted array matches the expected result
-	if !reflect.DeepEqual(sortedArray, expectedSortedArray) {
-		t.Errorf("BingoSort(%v) = %v; want %v", unsortedArray, sortedArray, expectedSortedArray)
-	}
+func BenchmarkBingo(b *testing.B) {
+	b.Run("Bingo Int", func(b *testing.B) {
+		array := generateIntArray(10000)
+		benchBingoAssert(b, array)
+	})
+	b.Run("Bingo Float", func(b *testing.B) {
+		array := generateFloatArray(10000)
+		benchBingoAssert(b, array)
+	})
+	b.Run("Bingo Negative", func(b *testing.B) {
+		array := generateNegativeArray(10000)
+		benchBingoAssert(b, array)
+	})
 }
 
-// BenchmarkBingoSort benchmarks the BingoSort function.
-func BenchmarkBingoSort(b *testing.B) {
-	// Generate a random unsorted array for each benchmark iteration
-	unsortedArray := generateRandomArray(100) // Change the array size as needed
-
+func benchBingoAssert[N Numeric](b *testing.B, array []N) {
+	b.Helper()
+	b.ResetTimer()
+	b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		// Make a copy of the unsorted array for each iteration to ensure fairness
-		arrayCopy := make([]int, len(unsortedArray))
-		copy(arrayCopy, unsortedArray)
-
-		// Run the sorting algorithm and measure the time it takes
-		b.StartTimer()
-		sorts.Bingo(arrayCopy)
-		b.StopTimer()
+		array = sorts.Bingo(array)
 	}
+	b.StopTimer()
 }

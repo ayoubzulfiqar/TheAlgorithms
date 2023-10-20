@@ -8,7 +8,7 @@ import "math/rand"
 	The algorithm sorts the array in-place without using additional memory for temporary arrays.
 
 */
-func RecursiveQuick(array []int) []int {
+func RecursiveQuick[T Numeric](array []T) []T {
 	if len(array) < 2 {
 		return array
 	}
@@ -31,7 +31,7 @@ func RecursiveQuick(array []int) []int {
 
 
 */
-func twoPartition(arr []int, low int, high int) int {
+func twoPartition[T Numeric](arr []T, low int, high int) int {
 	// Selecting Random Pivot: Why?
 
 	/*
@@ -49,7 +49,7 @@ func twoPartition(arr []int, low int, high int) int {
 	// Swapping the Pivot Index with  highest Element inside the array
 	arr[pivotIndex], arr[high] = arr[high], arr[pivotIndex]
 	// setting the highest element inside the array as pivot
-	var pivot int = arr[high]
+	var pivot T = arr[high]
 	var index int = low - 1
 
 	for i := low; i < high; i++ {
@@ -65,28 +65,28 @@ func twoPartition(arr []int, low int, high int) int {
 }
 
 // Iterative
-func Quick(array []int) []int {
+func Quick[T Numeric](array []T) []T {
 	// if the array have only 1 or no element
-	if len(array) < 2 {
-		panic("Can't be Sorted: Less than Two Element")
+	if len(array) <= 2 {
+		return array
 	}
 
-	stack := []int{0, len(array) - 1}
+	stack := []T{0, T(len(array) - 1)}
 
 	for len(stack) > 0 {
 		high := stack[len(stack)-1]
 		stack = stack[:len(stack)-1]
-		low := stack[len(stack)-1]
+		var low T = stack[len(stack)-1]
 		stack = stack[:len(stack)-1]
 
-		pivotIndex := itPartition(array, low, high)
+		pivotIndex := itPartition(array, int(low), int(high))
 
-		if pivotIndex-1 > low {
+		if pivotIndex-1 > int(low) {
 			stack = append(stack, low)
-			stack = append(stack, pivotIndex-1)
+			stack = append(stack, T(pivotIndex)-1)
 		}
-		if pivotIndex+1 < high {
-			stack = append(stack, pivotIndex+1)
+		if pivotIndex+1 < int(high) {
+			stack = append(stack, T(pivotIndex)+1)
 			stack = append(stack, high)
 		}
 	}
@@ -94,10 +94,10 @@ func Quick(array []int) []int {
 }
 
 // Iterative Partition Function
-func itPartition(array []int, low, high int) int {
+func itPartition[T Numeric](array []T, low, high int) int {
 	// set the highest like the far most element inside the array as the pivot
-	pivot := array[high]
-	index := low - 1
+	var pivot T = array[high]
+	var index int = low - 1
 	// loop through the array start to end
 	for j := low; j < high; j++ {
 		// if the element inside the array is the smaller than we will swap

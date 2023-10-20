@@ -60,15 +60,14 @@ index of the minimum unsorted element within a specified range of the slice.
 // using the Bingo Sort algorithm.
 func Bingo[T Numeric](array []T) []T {
 	// Get the length of the input slice.
-	n := len(array)
-
+	var end int = len(array)
 	// Iterate through the slice to perform the sorting.
-	for i := 0; i < n; i++ {
+	for start := 0; start < end; start++ {
 		// Find the index of the minimum unsorted element.
-		minIndex := findMinUnsorted(array, i, n)
+		minIndex := findMinUnsorted(array, start, end)
 
 		// Swap the minimum unsorted element with the current element (i).
-		array[i], array[minIndex] = array[minIndex], array[i]
+		array[start], array[minIndex] = array[minIndex], array[start]
 	}
 
 	// Return the sorted slice.
@@ -78,6 +77,9 @@ func Bingo[T Numeric](array []T) []T {
 // findMinUnsorted finds the index of the minimum unsorted element in a numeric slice.
 // It accepts a slice 'array' of type 'T', a 'start' index, and an 'end' index.
 // It returns the index of the minimum unsorted element.
+
+
+// Because the index of the array is always int so wee return int rather then T
 func findMinUnsorted[T Numeric](array []T, start, end int) int {
 	// Initialize the index of the minimum unsorted element with 'start'.
 	minIndex := start

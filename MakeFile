@@ -8,6 +8,9 @@ BINARY   := bin/main   # Set the binary name and path as needed
 # Targets
 .PHONY: test bench build clean
 
+run:
+	go run cmd/main.go
+
 test:
 	$(GOTEST) ./...
 

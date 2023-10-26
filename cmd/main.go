@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"time"
+
+	"github.com/ayoubzulfiqar/TheAlgorithms/algo/search"
 )
 
 type Numeric interface {
@@ -23,12 +25,23 @@ func MeasureExecutionTime() (time.Duration, time.Duration, time.Duration) {
 
 	// Call the function you want to measure
 	// arr := util.GenerateInt(1000000)
-	arr := []int{1, 3, 5, 7, 8, 2, 4, 6, 9}
+	// arr := []int{1, 3, 5, 7, 8, 2, 4, 6, 9}
+	// arr := []int{0, 1, 2, 3, 4, 5}
+	// arr := []string{"A", "B", "C", "D"}
 	// arr := []float64{9.0, 7.0, 5.0, 11.0, 12.0, 2.0, 14.0, 3.0, 10.0, 6.0}
+	// arr := []float64{0.0, 1.0, 2.0, 3.0, 4.0, 5.0}
 	// arr := []int{9, 7, 5, 11, 12, 2, 14, 3, 10, 6}
-	fmt.Printf("Unsorted %v\n", arr)
+	// key := 1
+	arr := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
-	fmt.Printf("Sorted %v\n", arr)
+	key := 0
+	idx := search.Fibonacci(arr, key)
+	if idx == -1 {
+		fmt.Printf("NOt FOUND%v", key)
+
+	} else {
+		fmt.Printf("Found Key: %v at Index: %v", key, idx)
+	}
 
 	endTime := time.Now()
 
@@ -40,3 +53,22 @@ func MeasureExecutionTime() (time.Duration, time.Duration, time.Duration) {
 
 	return durationMilliseconds, durationMicroseconds, durationSeconds
 }
+
+//
+
+/*
+
+func FastSqrt(x float64) float64 {
+	if x == 0 {
+		return 0
+	}
+
+	bits := math.Float64bits(x)
+	bits -= 1 << 52 // Subtract 2^52 from the exponent.
+	bits >>= 1      // Divide by 2.
+
+	bits += 1 << 61 // Add 2^61 to the exponent.
+	return math.Float64frombits(bits)
+}
+
+*/

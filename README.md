@@ -10,5 +10,4 @@ This collection provides cutting-edge building blocks to develop high-throughput
 ---
 
 [Sorting Algorithms](algo/sort/sort.md)
-
-WORK IN PROGRESS
+[Searching Algorithms](algo/search/search.md)

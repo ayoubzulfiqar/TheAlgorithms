@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	sorts "github.com/ayoubzulfiqar/TheAlgorithms/algo/sort/BitonicSort"
+	sorts "github.com/ayoubzulfiqar/TheAlgorithms/algo/Sorting/BitonicSort"
 )
 
 func TestBitonicSort(t *testing.T) {

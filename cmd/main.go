@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ayoubzulfiqar/TheAlgorithms/algo/search"
+	sequence "github.com/ayoubzulfiqar/TheAlgorithms/algo/Mathematical/Sequences"
 )
 
 type Numeric interface {
@@ -32,16 +32,11 @@ func MeasureExecutionTime() (time.Duration, time.Duration, time.Duration) {
 	// arr := []float64{0.0, 1.0, 2.0, 3.0, 4.0, 5.0}
 	// arr := []int{9, 7, 5, 11, 12, 2, 14, 3, 10, 6}
 	// key := 1
-	arr := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	// arr := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	// arr := []int{12, 8, 20}
 
-	key := 0
-	idx := search.Fibonacci(arr, key)
-	if idx == -1 {
-		fmt.Printf("NOt FOUND%v", key)
-
-	} else {
-		fmt.Printf("Found Key: %v at Index: %v", key, idx)
-	}
+	// fmt.Printf("Divisor: %v", v)
+	sequence.SeriesSum(5)
 
 	endTime := time.Now()
 
@@ -53,8 +48,6 @@ func MeasureExecutionTime() (time.Duration, time.Duration, time.Duration) {
 
 	return durationMilliseconds, durationMicroseconds, durationSeconds
 }
-
-//
 
 /*
 

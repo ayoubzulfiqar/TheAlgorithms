@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	sequence "github.com/ayoubzulfiqar/TheAlgorithms/algo/Mathematical/Sequences"
+	digit "github.com/ayoubzulfiqar/TheAlgorithms/algo/Mathematical/NumberDigits"
 )
 
 type Numeric interface {
@@ -36,7 +36,9 @@ func MeasureExecutionTime() (time.Duration, time.Duration, time.Duration) {
 	// arr := []int{12, 8, 20}
 
 	// fmt.Printf("Divisor: %v", v)
-	sequence.SeriesSum(5)
+	result := digit.IsPerfectSquare(8314)
+
+	fmt.Printf("Minimum characters to remove to make a perfect square: %v\n", result)
 
 	endTime := time.Now()
 

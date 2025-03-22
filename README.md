@@ -9,6 +9,29 @@ This collection provides cutting-edge building blocks to develop high-throughput
 
 ---
 
+## **Implemented**
+
 [Sorting Algorithms](algo/sort/sort.md)
 
 [Searching Algorithms](algo/search/search.md)
+
+
+## **Coming Soon**
+
+[BitWise]
+[BigInteger]
+[BackTracking]
+[Ciphers]
+[Compression]
+[Conversion]
+[DynamicAlgorithms]
+[Permutation]
+[Geometry]
+[Graph]
+[Greedy]
+[MachineLearning]
+[Math]
+[Navigation]
+[NumberTheory]
+
+And Many More

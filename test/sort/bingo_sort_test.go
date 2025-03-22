@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	sorts "github.com/ayoubzulfiqar/TheAlgorithms/algo/sort"
+	sort "github.com/ayoubzulfiqar/TheAlgorithms/algo/Sorting"
 )
 
 func TestBingoSort(t *testing.T) {
@@ -59,7 +59,7 @@ func TestBingoSort(t *testing.T) {
 
 func testBingoAssert[N Numeric](t *testing.T, data, expected []N) {
 	t.Helper()
-	data = sorts.Bingo(data)
+	data = sort.Bingo(data)
 	if !reflect.DeepEqual(data, expected) {
 		t.Errorf("\nSorting failed. Got %v, expected %v", data, expected)
 	}
@@ -85,7 +85,7 @@ func benchBingoAssert[N Numeric](b *testing.B, array []N) {
 	b.ResetTimer()
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		array = sorts.Bingo(array)
+		array = sort.Bingo(array)
 	}
 	b.StopTimer()
 }

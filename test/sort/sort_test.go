@@ -10,7 +10,7 @@ package sort
 import (
 	"testing"
 
-	sorts "github.com/ayoubzulfiqar/TheAlgorithms/algo/sort"
+	sorts "github.com/ayoubzulfiqar/TheAlgorithms/algo/Sorting"
 )
 
 const tenTH int = 10000

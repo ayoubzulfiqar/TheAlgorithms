@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	sorts "github.com/ayoubzulfiqar/TheAlgorithms/algo/sort/BitonicSort"
+	sort "github.com/ayoubzulfiqar/TheAlgorithms/algo/Sorting/BitonicSort"
 )
 
 func TestBitonicSort(t *testing.T) {
@@ -60,7 +60,7 @@ func TestBitonicSort(t *testing.T) {
 func testBitonicAssert[N Numeric](t *testing.T, data, expected []N) {
 	t.Helper()
 	// true for ascending
-	data = sorts.Bitonic(data, true)
+	data = sort.Bitonic(data, true)
 	if !reflect.DeepEqual(data, expected) {
 		t.Errorf("\nSorting failed. Got %v, expected %v", data, expected)
 	}
@@ -87,7 +87,7 @@ func benchBitonicAssert[N Numeric](b *testing.B, array []N) {
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
 		// true for ascending
-		array = sorts.Bitonic(array, true)
+		array = sort.Bitonic(array, true)
 	}
 	b.StopTimer()
 }

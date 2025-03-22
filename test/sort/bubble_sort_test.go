@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	sorts "github.com/ayoubzulfiqar/TheAlgorithms/algo/sort"
+	sorts "github.com/ayoubzulfiqar/TheAlgorithms/algo/Sorting"
 )
 
 func TestBubbleSort(t *testing.T) {

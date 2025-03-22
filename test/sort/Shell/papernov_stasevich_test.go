@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	sorts "github.com/ayoubzulfiqar/TheAlgorithms/algo/sort/ShellSort"
+	sorts "github.com/ayoubzulfiqar/TheAlgorithms/algo/Sorting/ShellSort"
 )
 
 func TestPapernovStasevichSort(t *testing.T) {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ayoubzulfiqar/TheAlgorithms/algo/search"
+	search "github.com/ayoubzulfiqar/TheAlgorithms/algo/Searching"
 )
 
 type Numeric interface {
